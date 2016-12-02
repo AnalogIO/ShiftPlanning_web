@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "node server"
+  },
+  "dependencies": {
+    "express": "4.14.0"
+  }
+}
