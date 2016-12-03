@@ -22,10 +22,7 @@ module.exports = {
       ref: "origin/master",
       repo: "git@github.com:AnalogIO/ShiftPlanning_web.git",
       path: "/var/www/shiftplanning.cafeanalog.dk",
-      "post-deploy": "npm i && pm2 startOrGracefulReload ecosystem.config.js --env production",
-      env: {
-        NODE_ENV: "production",
-      },
+      "post-deploy": "yarn && NODE_ENV=production npm run build && pm2 startOrGracefulReload ecosystem.config.js --env production",
     },
   },
 };

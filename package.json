@@ -1,7 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "dev": "node server"
+    "dev": "node server",
+    "build": "webpack"
   },
   "dependencies": {
     "@types/axios": "0.9.34",

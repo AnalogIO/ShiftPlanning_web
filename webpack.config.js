@@ -1,17 +1,11 @@
 const webpack = require('webpack');
 const path = require('path');
 
-module.exports = {
-  devtool: 'eval',
-  entry: [
-    'react-hot-loader/patch',
-    'webpack-hot-middleware/client',
-    path.resolve('src/index.tsx'),
-  ],
+const config = {
   output: {
     filename: 'bundle.js',
     path: path.resolve('dist'),
-    publicPath: '/assets/',
+    publicPath: '/dist/',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
@@ -36,8 +30,43 @@ module.exports = {
       },
     ],
   },
-  plugins: [
+};
+
+if (process.env.NODE_ENV === 'production') {
+  console.log('PRODUCTION BUILD');
+
+  config.devtool = 'cheap-module-source-map';
+
+  config.entry = path.resolve('src/index.tsx');
+
+  config.plugins = [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production'),
+      },
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+      },
+    }),
+  ];
+} else {
+  console.log('DEVELOPMENT BUILD');
+
+  config.devtool = 'eval';
+
+  config.entry = [
+    'react-hot-loader/patch',
+    'webpack-hot-middleware/client',
+    path.resolve('src/index.tsx'),
+  ];
+
+  config.plugins = [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
-  ],
-};
+  ];
+}
+
+
+module.exports = config;

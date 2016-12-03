@@ -1,19 +1,25 @@
 const path = require('path');
 const webpack = require('webpack');
 const express = require('express');
-const devMiddleware = require('webpack-dev-middleware');
-const hotMiddleware = require('webpack-hot-middleware');
-const config = require('./webpack.config');
 
 const app = express();
-const compiler = webpack(config);
 
-app.use(devMiddleware(compiler, {
-  publicPath: config.output.publicPath,
-  historyApiFallback: true,
-}));
+if (process.env.NODE_ENV !== 'production') {
+  const devMiddleware = require('webpack-dev-middleware');
+  const hotMiddleware = require('webpack-hot-middleware');
+  const config = require('./webpack.config');
 
-app.use(hotMiddleware(compiler));
+  const compiler = webpack(config);
+
+  app.use(devMiddleware(compiler, {
+    publicPath: config.output.publicPath,
+    historyApiFallback: true,
+  }));
+
+  app.use(hotMiddleware(compiler));
+}
+
+app.use('/dist', express.static('dist'));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
