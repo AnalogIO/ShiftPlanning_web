@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { observable, computed, action, runInAction } from 'mobx';
+import { observable, computed, action } from 'mobx';
 import client, { setAuthorizationToken } from 'api';
 
 export interface Manager {
@@ -26,14 +26,26 @@ class AuthStore {
     // otherwise components will be rendered before an Authorization token
     // has been set for all future requests!
     setAuthorizationToken(manager.token);
-    runInAction('update the manager', () => {
-      this.manager = manager;
-    });
+    this.manager = manager;
 
     return manager;
   }
 };
 
-export default {
+export type Employee = any;
+
+class EmployeeStore {
+  @observable employees: Employee[] = [];
+
+  @action async getEmployees() {
+    const res = await client.get('/employees')
+    this.employees = res.data as Employee[];
+  }
+}
+
+const stores = {
   AuthStore: new AuthStore(),
+  EmployeeStore: new EmployeeStore(),
 };
+
+export default stores;

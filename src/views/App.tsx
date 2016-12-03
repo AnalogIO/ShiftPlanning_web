@@ -5,6 +5,7 @@ import { observable } from 'mobx';
 const { Link, Match } = require('react-router');
 
 import LoginContainer from 'containers/Login';
+import Employees from 'views/Employees';
 import NavLink from 'components/NavLink';
 
 @inject('stores') @observer
@@ -32,6 +33,7 @@ export default class App extends Component<any, {}> {
 
           <section className="section">
             <div className="container">
+              <Match pattern="/employees" component={Employees} />
             </div>
           </section>
         </div>
