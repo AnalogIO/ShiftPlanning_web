@@ -1,5 +1,6 @@
 import { createHash } from 'crypto';
 import { observable, computed, action } from 'mobx';
+import * as _ from 'lodash';
 import client, { setAuthorizationToken } from 'api';
 
 export interface Manager {
@@ -33,13 +34,32 @@ class AuthStore {
 };
 
 export type Employee = any;
+export type EmployeeTitle = any;
 
 class EmployeeStore {
   @observable employees: Employee[] = [];
+  @observable titles: EmployeeTitle[] = [];
+
+  getEmployee(id: number): Employee | null {
+    const employee = _.find(this.employees, (e: any) => e.id == id);
+
+    // `find` returns the value or undefined but by returning null instead we
+    // can get strictNullChecks
+    return employee ? employee : null;
+  }
+
+  @action async getTitles() {
+    const res = await client.get('/employeetitles');
+    this.titles = res.data as EmployeeTitle[];
+  }
 
   @action async getEmployees() {
     const res = await client.get('/employees')
     this.employees = res.data as Employee[];
+  }
+
+  updateEmployee(employee: Employee) {
+    return client.put(`/employees/${employee.id}`, employee);
   }
 }
 
