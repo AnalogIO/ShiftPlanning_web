@@ -18,6 +18,7 @@ class AuthStore {
 
   // This method expects password to be the plaintext: it will do the hashing
   @action async login(username: string, password: string): Promise<Manager> {
+    username = username.trim();
     password = createHash('sha256').update(password).digest('base64');
 
     const res = await client.post('/manager/login', { username, password });
@@ -56,6 +57,10 @@ class EmployeeStore {
   @action async getEmployees() {
     const res = await client.get('/employees')
     this.employees = res.data as Employee[];
+  }
+
+  createEmployee(employee: Employee) {
+    return client.post('/employees', employee);
   }
 
   updateEmployee(employee: Employee) {

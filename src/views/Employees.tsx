@@ -7,6 +7,7 @@ const { Link, Match } = require('react-router');
 
 import Employee from 'components/Employee';
 import EditEmployeeForm from 'components/EditEmployeeForm';
+import NewEmployeeForm from 'components/NewEmployeeForm';
 
 @inject('stores') @observer
 export default class Employees extends Component<any, {}> {
@@ -20,13 +21,22 @@ export default class Employees extends Component<any, {}> {
   }
 
   render() {
+    const { pathname } = this.props;
     const { EmployeeStore } = this.props.stores;
+
+    const newEmployeeLink = (
+      <Link
+        to={`${pathname}/new`}
+        className="icon"
+        style={{verticalAlign: 'middle', color: '#363636'}}
+      >
+        <i className="fa fa-plus"></i>
+      </Link>
+    );
 
     if (!EmployeeStore.employees.length) {
       return <h1 className="title">Getting employees...</h1>
     }
-
-    const { pathname } = this.props;
 
     const employees = EmployeeStore.employees.map((e: any, i: any) => (
       <Link key={i} className="column is-3" to={`${pathname}/${e.id}`}>
@@ -44,7 +54,15 @@ export default class Employees extends Component<any, {}> {
           return <EditEmployeeForm onSubmit={(e: any) => EmployeeStore.updateEmployee(e)} employee={employee} titles={titles} />
         }} />
 
-        <h1 className="title">Employees</h1>
+        <Match pattern={`${pathname}/new`} render={(props: any) => {
+          const titles = EmployeeStore.titles;
+
+          const employee = {} as any;
+
+          return <NewEmployeeForm onSubmit={(e: any) => EmployeeStore.createEmployee(e)} newEmployee={employee} titles={titles} />
+        }} />
+
+        <h1 className="title">Employees {newEmployeeLink}</h1>
         <div className="columns is-multiline">
           {employees}
         </div>

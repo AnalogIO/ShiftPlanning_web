@@ -3,19 +3,24 @@ import { action } from 'mobx';
 import { observer } from 'mobx-react';
 
 @observer
-export default class EditEmployeeForm extends Component<any, {}> {
+export default class NewEmployeeForm extends Component<any, {}> {
   onSubmit = (e: any) => {
     e.preventDefault();
 
-    this.props.onSubmit(this.props.employee);
+    const { newEmployee } = this.props;
+    const { email, firstName, lastName, employeeTitleId, profilePhoto } = newEmployee;
+
+    newEmployee.email = email || '';
+    newEmployee.firstName = firstName || '';
+    newEmployee.lastName = lastName || '';
+    newEmployee.employeeTitleId = parseInt(employeeTitleId || this.props.titles[0].id);
+    newEmployee.profilePhoto = profilePhoto || '';
+
+    this.props.onSubmit(newEmployee);
   }
 
   updateProperty = (key: string, value: any) => {
-    this.props.employee[key] = value;
-  }
-
-  onClick = (e: any) => {
-    this.updateProperty(e.target.name, e.target.checked);
+    this.props.newEmployee[key] = value;
   }
 
   onChange = (e: any) => {
@@ -26,13 +31,13 @@ export default class EditEmployeeForm extends Component<any, {}> {
     const reader = new FileReader();
     reader.readAsDataURL(e.target.files[0]);
     reader.addEventListener('load', () => {
-      this.props.employee.profilePhoto = reader.result;
+      this.props.newEmployee.profilePhoto = reader.result;
     });
   }
 
   render() {
-    const { employee, titles } = this.props;
-    const { firstName, lastName, employeeTitleId, email, active } = employee;
+    const { newEmployee } = this.props;
+    const { firstName, lastName, employeeTitleId, email } = newEmployee;
 
     return (
       <div className="box">
@@ -56,16 +61,11 @@ export default class EditEmployeeForm extends Component<any, {}> {
           <p className="control">
             <span className="select">
               <select name="employeeTitleId" value={employeeTitleId} onChange={this.onChange}>
-                {titles.map(({ title, id }: any) => (
+                {this.props.titles.map(({ title, id }: any) => (
                   <option key={id} value={id}>{title}</option>
                 ))}
               </select>
             </span>
-          </p>
-
-          <label className="label">Active:</label>
-          <p className="control">
-            <input type="checkbox" name="active" checked={active} onChange={this.onClick} />
           </p>
 
           <label className="label">Profile photo:</label>
@@ -74,7 +74,7 @@ export default class EditEmployeeForm extends Component<any, {}> {
           </p>
 
           <p className="control">
-            <button className="button is-primary">Update employee</button>
+            <button className="button is-primary">Create employee</button>
           </p>
         </form>
       </div>
