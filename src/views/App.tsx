@@ -4,8 +4,9 @@ import { observable } from 'mobx';
 
 const { Link, Match } = require('react-router');
 
-import LoginContainer from 'containers/Login';
 import Employees from 'views/Employees';
+import Schedules from 'views/Schedules';
+import LoginContainer from 'containers/Login';
 import NavLink from 'components/NavLink';
 
 @inject('stores') @observer
@@ -34,6 +35,7 @@ export default class App extends Component<any, {}> {
           <section className="section">
             <div className="container">
               <Match pattern="/employees" component={Employees} />
+              <Match pattern="/schedules" component={Schedules} />
             </div>
           </section>
         </div>

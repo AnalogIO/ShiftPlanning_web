@@ -68,9 +68,23 @@ class EmployeeStore {
   }
 }
 
+export type Schedule = any;
+
+class ScheduleStore {
+  @observable schedules = [] as Schedule[];
+
+  @action async getSchedules() {
+    const res = await client.get('/schedules');
+
+    this.schedules = res.data;
+    return this.schedules;
+  }
+}
+
 const stores = {
   AuthStore: new AuthStore(),
   EmployeeStore: new EmployeeStore(),
+  ScheduleStore: new ScheduleStore(),
 };
 
 export default stores;
