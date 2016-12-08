@@ -5,6 +5,8 @@ import * as _ from 'lodash';
 
 const { Link, Match } = require('react-router');
 
+import Schedule from 'components/Schedule';
+
 @inject('stores') @observer
 export default class Schedules extends Component<any, {}> {
   componentDidMount() {
@@ -14,32 +16,43 @@ export default class Schedules extends Component<any, {}> {
   }
 
   render() {
+    const { pathname } = this.props;
     const { ScheduleStore } = this.props.stores;
 
     const schedules = ScheduleStore.schedules.map((s: any) => (
       <tr key={s.id}>
-        <td>{s.name}</td>
+        <td><Link to={`${pathname}/${s.id}`}>{s.name}</Link></td>
         <td>{s.numberOfWeeks}</td>
         <td>{s.scheduledShifts.length}</td>
       </tr>
     ));
 
+    if (!schedules.length) {
+      return <h1 className="title">Getting schedules...</h1>
+    }
+
     return (
       <div>
-        <h1 className="title">Schedules</h1>
+        <Match pattern={`${pathname}/:id`} render={(props: any) => (
+          <Schedule schedule={ScheduleStore.getById(props.params.id)} />
+        )} />
 
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Weeks</th>
-              <th>Scheduled shifts</th>
-            </tr>
-          </thead>
-          <tbody>
-            {schedules}
-          </tbody>
-        </table>
+        <div>
+          <h1 className="title">Schedules</h1>
+
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Weeks</th>
+                <th>Scheduled shifts</th>
+              </tr>
+            </thead>
+            <tbody>
+              {schedules}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }

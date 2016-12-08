@@ -73,10 +73,14 @@ export type Schedule = any;
 class ScheduleStore {
   @observable schedules = [] as Schedule[];
 
+  getById(id: number): Schedule | null {
+    return _.find(this.schedules, (s) => id == s.id) || null;
+  }
+
   @action async getSchedules() {
     const res = await client.get('/schedules');
 
-    this.schedules = res.data;
+    this.schedules = res.data as Schedule[];
     return this.schedules;
   }
 }
