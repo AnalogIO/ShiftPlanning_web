@@ -1,28 +1,16 @@
 import React from 'react';
 import { range, has } from 'lodash';
 
-enum Weekday {
-  Monday = 1,
-  Tuesday,
-  Wednesday,
-  Thursday,
-  Friday,
-  Saturday,
-  Sunday,
-}
+const { Link, Match } = require('react-router');
+
+import DayShifts from 'components/DayShifts';
 
 export default (props: any) => {
-  const { pathname, schedule } = props;
+  const { route, schedule } = props;
+  const { pathname } = route;
 
   if (!schedule) {
     return <h2 className="subtitle">Schedule not found!</h2>
-  }
-
-  const shift = (shift: any, key: any) => {
-    const start = shift.start.split(':', 2).join(':');
-    const end = shift.end.split(':', 2).join(':');
-
-    return <div key={key}>{start} - {end}</div>;
   }
 
   const shifts = schedule.scheduledShifts.reduce((acc: any, s: any) => {
@@ -38,17 +26,13 @@ export default (props: any) => {
 
   const days = range(1, 8);
 
-  const weeks = range(1, schedule.numberOfWeeks + 1).map(i => (
-    <div key={i} className="columns">
-      <div className="column" style={{alignSelf:'center', flexGrow:.5}}>Week {i}</div>
+  const weeks = range(1, schedule.numberOfWeeks + 1).map(w => (
+    <div key={w} className="columns">
+      <div className="column" style={{alignSelf:'center', flexGrow:.5}}>Week {w}</div>
       {days.map(day => (
-        <div key={day} className="column has-text-centered">
-          <div>{Weekday[day]}</div>
-          <div style={{height:'200px', background:'#ddd'}}>
-            {has(shifts, [i, day]) ? (
-              shifts[i][day].map(shift)
-            ) : ''}
-          </div>
+        <div key={`${w}:${day}`} className="column has-text-centered">
+          <DayShifts shifts={shifts} day={day} week={w} />
+          <Link to={`${pathname}/${w}/${day}`}>+ Add shift</Link>
         </div>
       ))}
     </div>
@@ -57,6 +41,7 @@ export default (props: any) => {
   return (
     <div className="box">
       <h2 className="subtitle has-text-centered">{schedule.name}</h2>
+
       {weeks}
     </div>
   );

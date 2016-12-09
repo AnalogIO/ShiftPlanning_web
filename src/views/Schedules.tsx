@@ -34,7 +34,7 @@ export default class Schedules extends Component<any, {}> {
     return (
       <div>
         <Match pattern={`${pathname}/:id`} render={(props: any) => (
-          <Schedule schedule={ScheduleStore.getById(props.params.id)} />
+          <Schedule route={props} schedule={ScheduleStore.getById(props.params.id)} />
         )} />
 
         <div>
