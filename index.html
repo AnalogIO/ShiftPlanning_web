@@ -6,6 +6,44 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.2.3/css/bulma.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+/* temporary hack for hiding the cross from tags when adding an employee */
+.delete.is-small.hide {
+  text-indent: -10000em;
+}
+
+.ReactTags__suggestions {
+  position: fixed;
+  z-index: 10000;
+}
+
+.ReactTags__suggestions ul {
+  list-style-type: none;
+  box-shadow: .05em .01em .5em rgba(0,0,0,.2);
+  background: white;
+  width: 220px;
+  padding: 0;
+  margin: 0;
+}
+
+.ReactTags__suggestions li {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 5px;
+  margin: 0;
+}
+
+.ReactTags__suggestions li mark {
+    text-decoration: underline;
+    background: none;
+    font-weight: 600;
+}
+
+.ReactTags__suggestions ul li.active {
+    background: #b7cfe0;
+    cursor: pointer;
+}
+  </style>
 </head>
 <body>
   <div id="app"></div>

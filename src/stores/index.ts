@@ -59,16 +59,17 @@ class EmployeeStore {
     this.employees = res.data as Employee[];
   }
 
-  createEmployee(employee: Employee) {
+  async createEmployee(employee: Employee) {
     return client.post('/employees', employee);
   }
 
-  updateEmployee(employee: Employee) {
+  async updateEmployee(employee: Employee) {
     return client.put(`/employees/${employee.id}`, employee);
   }
 }
 
 export type Schedule = any;
+export type Shift = any;
 
 class ScheduleStore {
   @observable schedules = [] as Schedule[];
@@ -82,6 +83,12 @@ class ScheduleStore {
 
     this.schedules = res.data as Schedule[];
     return this.schedules;
+  }
+
+  @action async newShift(id: number, s: Shift) {
+    const res = await client.post(`/schedules/${id}`, s);
+
+    return res.data;
   }
 }
 
