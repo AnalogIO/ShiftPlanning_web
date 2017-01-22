@@ -11,6 +11,7 @@ import Schedule from 'components/Schedule';
 import AddShift from 'components/AddShift';
 import UpdateShift from 'components/UpdateShift';
 import NewScheduleForm from 'components/NewScheduleForm';
+import RolloutForm from 'components/RolloutForm';
 
 @inject('stores') @observer
 export default class Schedules extends Component<any, {}> {
@@ -116,6 +117,18 @@ export default class Schedules extends Component<any, {}> {
               route={props}
               shift={shift}
               employees={EmployeeStore.employees}
+            />
+          );
+        }} />
+
+        <Match pattern={`${pathname}/:id/rollout`} render={(props: any) => {
+          const schedule = _.find(ScheduleStore.schedules, (s: ISchedule) => s.id == props.params.id);
+
+          return (
+            <RolloutForm
+              onSubmit={(range: any) => ScheduleStore.rollout(schedule, range)}
+              schedule={schedule}
+              route={props}
             />
           );
         }} />

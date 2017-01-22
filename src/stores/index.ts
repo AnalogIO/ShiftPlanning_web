@@ -160,6 +160,13 @@ class ScheduleStore {
 
     return res.data;
   }
+
+  async rollout(schedule: ISchedule, range: { from: string, to: string }) {
+    const res = await client.post(`/schedules/${schedule.id}/rollout`, range);
+    console.log(res.data);
+
+    return res.data;
+  }
 }
 
 const stores = {

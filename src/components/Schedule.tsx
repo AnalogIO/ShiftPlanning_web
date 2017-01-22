@@ -41,8 +41,8 @@ export default (props: any) => {
   return (
     <div className="box">
       <h2 className="subtitle has-text-centered">{schedule.name}</h2>
-
       {weeks}
+      <Link to={`${pathname}/rollout`} className="button">Rollout</Link>
     </div>
   );
 }
