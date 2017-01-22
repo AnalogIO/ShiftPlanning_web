@@ -69,7 +69,9 @@ class EmployeeStore {
 
   @action async getEmployees() {
     const res = await client.get('/employees')
-    this.employees = res.data as Employee[];
+    const data = res.data as Employee[];
+    const employees = _.sortBy(data, ['firstName', 'lastName']);
+    this.employees = employees as Employee[];
   }
 
   async createEmployee(employee: Employee) {
