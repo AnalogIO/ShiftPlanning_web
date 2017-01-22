@@ -1,7 +1,7 @@
 import React from 'react';
 import { range, has } from 'lodash';
 
-const { Link, Match } = require('react-router');
+const { Link } = require('react-router');
 
 import DayShifts from 'components/DayShifts';
 

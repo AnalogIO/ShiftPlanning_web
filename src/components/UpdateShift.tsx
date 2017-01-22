@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { observer } from 'mobx-react';
 
 import { Employee } from '../stores';
@@ -18,6 +18,10 @@ enum Weekday {
 
 @observer
 export default class UpdateShift extends Component<any, any> {
+  static contextTypes = {
+    router: PropTypes.object
+  }
+
   state = {
     employees: this.props.shift.employees.map((e: any) => {
       return {
@@ -44,16 +48,17 @@ export default class UpdateShift extends Component<any, any> {
     this.props.handleUpdateShift(shift);
   }
 
-  handleDeleteShift = (e: any) => {
+  handleDeleteShift = async (e: any) => {
     e.preventDefault();
 
     if (!confirm('Are you sure?')) {
       return;
     }
 
-    const { shift } = this.props;
+    const { shift, route } = this.props;
 
-    this.props.handleDeleteShift(shift);
+    await this.props.handleDeleteShift(shift)
+    this.context.router.transitionTo(`/schedules/${route.params.id}`);
   }
 
   updateProperty = (key: string, value: any) => {

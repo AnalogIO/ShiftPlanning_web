@@ -115,6 +115,9 @@ class ScheduleStore {
   @action async deleteShift(id: ScheduleId, sid: ScheduleShiftId) {
     const res = await client.delete(`/schedules/${id}/${sid}`);
 
+    const schedule = _.find(this.schedules, ['id', id]);
+    const removed = _.remove(schedule.scheduledShifts, (s: Shift) => s.id == sid);
+
     return res.data;
   }
 }
