@@ -106,6 +106,22 @@ class ScheduleStore {
     return this.schedules;
   }
 
+  @action async newSchedule(s: ISchedule) {
+    const res = await client.post(`/schedules`, s);
+
+    this.schedules.push(res.data);
+
+    return res.data;
+  }
+
+  @action async deleteSchedule(s: ISchedule) {
+    const res = await client.delete(`/schedules/${s.id}`);
+
+    _.remove(this.schedules, ['id', s.id]);
+
+    return res.data;
+  }
+
   @action async newShift(id: IScheduleId, s: IShift) {
     // there is a bug here
     // for some reason id is a string

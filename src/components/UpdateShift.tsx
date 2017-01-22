@@ -47,10 +47,10 @@ export default class UpdateShift extends Component<any, any> {
     delete shift.employees;
 
     await this.props.handleUpdateShift(shift);
-    this.state.updated = true;
 
-    // Not sure why this is necessary
-    this.forceUpdate();
+    this.setState({
+      updated: true,
+    });
   }
 
   handleDeleteShift = async (e: any) => {

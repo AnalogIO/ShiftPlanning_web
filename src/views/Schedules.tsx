@@ -3,13 +3,14 @@ import { inject, observer } from 'mobx-react';
 import { action } from 'mobx';
 import * as _ from 'lodash';
 
-import { IShift } from '../stores';
+import { IShift, ISchedule } from '../stores';
 
 const { Link, Match } = require('react-router');
 
 import Schedule from 'components/Schedule';
 import AddShift from 'components/AddShift';
 import UpdateShift from 'components/UpdateShift';
+import NewScheduleForm from 'components/NewScheduleForm';
 
 @inject('stores') @observer
 export default class Schedules extends Component<any, {}> {
@@ -20,15 +21,43 @@ export default class Schedules extends Component<any, {}> {
     EmployeeStore.getEmployees();
   }
 
+  handleDelete = (s: ISchedule) => {
+    const { ScheduleStore } = this.props.stores;
+
+    if (!confirm('Are you sure?')) {
+      return;
+    }
+
+    ScheduleStore.deleteSchedule(s);
+  }
+
   render() {
     const { pathname } = this.props;
     const { ScheduleStore, EmployeeStore } = this.props.stores;
+
+    const newScheduleLink = (
+      <Link
+        to={`${pathname}/new`}
+        className="icon"
+        style={{verticalAlign: 'middle', color: '#363636'}}
+      >
+        <i className="fa fa-plus"></i>
+      </Link>
+    );
 
     const schedules = ScheduleStore.schedules.map((s: any) => (
       <tr key={s.id}>
         <td><Link to={`${pathname}/${s.id}`}>{s.name}</Link></td>
         <td>{s.numberOfWeeks}</td>
         <td>{s.scheduledShifts.length}</td>
+        <td>
+          <a
+            // FIXME: oh god why
+            onClick={(e) => { e.preventDefault(); this.handleDelete(s); }}
+            className="delete"
+          >
+          </a>
+        </td>
       </tr>
     ));
 
@@ -39,7 +68,9 @@ export default class Schedules extends Component<any, {}> {
     return (
       <div>
         <Match pattern={`${pathname}/:id`} render={(props: any) => (
-          <Schedule route={props} schedule={ScheduleStore.getById(props.params.id)} />
+          props.params.id === 'new'
+            ? null
+            : <Schedule route={props} schedule={ScheduleStore.getById(props.params.id)} />
         )} />
 
         <Match pattern={`${pathname}/:id/:week/:day/new`} render={(props: any) => {
@@ -89,8 +120,19 @@ export default class Schedules extends Component<any, {}> {
           );
         }} />
 
+        <Match pattern={`${pathname}/new`} render={(props: any) => {
+          const schedule = {} as ISchedule;
+
+          return (
+            <NewScheduleForm
+              onSubmit={(s: ISchedule) => ScheduleStore.newSchedule(s)}
+              newSchedule={schedule}
+            />
+          );
+        }} />
+
         <div>
-          <h1 className="title">Schedules</h1>
+          <h1 className="title">Schedules {newScheduleLink}</h1>
 
           <table className="table">
             <thead>
@@ -98,6 +140,7 @@ export default class Schedules extends Component<any, {}> {
                 <th>Name</th>
                 <th>Weeks</th>
                 <th>Scheduled shifts</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>

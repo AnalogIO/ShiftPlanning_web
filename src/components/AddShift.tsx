@@ -37,10 +37,10 @@ export default class AddShift extends Component<any, any> {
     newShift.employeeIds = employeeIds;
 
     await this.props.handleNewShift(newShift);
-    this.state.created = true;
 
-    // Not sure why this is necessary
-    this.forceUpdate();
+    this.setState({
+      updated: true,
+    });
   }
 
   updateProperty = (key: string, value: any) => {
