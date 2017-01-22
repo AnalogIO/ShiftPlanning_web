@@ -11,10 +11,19 @@ export default class EditEmployeeForm extends Component<any, {}> {
   onSubmit = (e: any) => {
     e.preventDefault();
     this.props.onSubmit(this.props.employee);
+
+    this.setState({
+      updated: true,
+    });
   }
 
   onDelete = (e: any) => {
     e.preventDefault();
+
+    if (!confirm('Are you sure?')) {
+      return;
+    }
+
     this.props.onDelete(this.props.employee);
   }
 

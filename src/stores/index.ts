@@ -75,7 +75,11 @@ class EmployeeStore {
   }
 
   async createEmployee(employee: IEmployee) {
-    return client.post('/employees', employee);
+    const res = await client.post('/employees', employee);
+
+    this.employees.unshift(res.data);
+
+    return res.data;
   }
 
   async updateEmployee(employee: IEmployee) {
@@ -83,7 +87,11 @@ class EmployeeStore {
   }
 
   async deleteEmployee(employee: IEmployee) {
-    return client.delete(`/employees/${employee.id}`);
+    const res = await client.delete(`/employees/${employee.id}`);
+
+    _.remove(this.employees, (e) => e.id == employee.id);
+
+    return res.data;
   }
 }
 

@@ -4,7 +4,11 @@ import { observer } from 'mobx-react';
 
 @observer
 export default class NewEmployeeForm extends Component<any, {}> {
-  onSubmit = (e: any) => {
+  state = {
+    created: false,
+  }
+
+  onSubmit = async (e: any) => {
     e.preventDefault();
 
     const { newEmployee } = this.props;
@@ -16,7 +20,10 @@ export default class NewEmployeeForm extends Component<any, {}> {
     newEmployee.employeeTitleId = parseInt(employeeTitleId || this.props.titles[0].id);
     newEmployee.profilePhoto = profilePhoto || '';
 
-    this.props.onSubmit(newEmployee);
+    await this.props.onSubmit(newEmployee);
+    this.setState({
+      created: true,
+    });
   }
 
   updateProperty = (key: string, value: any) => {
@@ -76,6 +83,8 @@ export default class NewEmployeeForm extends Component<any, {}> {
           <p className="control">
             <button className="button is-primary">Create employee</button>
           </p>
+
+          <div>{this.state.created ? 'Employee has been created!' : ''}</div>
         </form>
       </div>
     );
