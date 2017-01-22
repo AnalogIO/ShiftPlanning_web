@@ -31,8 +31,8 @@ export default (props: any) => {
       <div className="column" style={{alignSelf:'center', flexGrow:.5}}>Week {w}</div>
       {days.map(day => (
         <div key={`${w}:${day}`} className="column has-text-centered">
-          <DayShifts shifts={shifts} day={day} week={w} />
-          <Link to={`${pathname}/${w}/${day}`}>+ Add shift</Link>
+          <DayShifts schedule={schedule.id} shifts={shifts} day={day} week={w} />
+          <Link to={`${pathname}/${w}/${day}/new`}>+ Add shift</Link>
         </div>
       ))}
     </div>

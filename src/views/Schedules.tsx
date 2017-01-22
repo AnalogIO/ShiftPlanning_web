@@ -9,6 +9,7 @@ const { Link, Match } = require('react-router');
 
 import Schedule from 'components/Schedule';
 import AddShift from 'components/AddShift';
+import UpdateShift from 'components/UpdateShift';
 
 @inject('stores') @observer
 export default class Schedules extends Component<any, {}> {
@@ -41,10 +42,51 @@ export default class Schedules extends Component<any, {}> {
           <Schedule route={props} schedule={ScheduleStore.getById(props.params.id)} />
         )} />
 
-        <Match pattern={`${pathname}/:id/:week/:day`} render={(props: any) => {
+        <Match pattern={`${pathname}/:id/:week/:day/new`} render={(props: any) => {
           const shift = {} as Shift;
           const id = props.params.id;
-          return <AddShift handleNewShift={(s: Shift) => ScheduleStore.newShift(id, s)} route={props} newShift={shift} employees={EmployeeStore.employees} />
+          return (
+            <AddShift
+              handleNewShift={(s: Shift) => ScheduleStore.newShift(id, s)}
+              route={props}
+              newShift={shift}
+              employees={EmployeeStore.employees}
+            />
+          );
+        }} />
+
+        <Match pattern={`${pathname}/:id/:week/:day/:sid`} render={(props: any) => {
+          // this is pretty poor but otherwise both would get matched
+          // using `exact` did not work for whatever reason
+          if (props.params.sid === 'new') {
+            return null;
+          }
+
+          const schedule = ScheduleStore
+            .schedules
+            .find((s: any) => s.id == props.params.id);
+
+          if (!schedule) {
+            return null;
+          }
+
+          const shift = schedule
+            .scheduledShifts
+            .find((s: any) => s.id == props.params.sid);
+
+          if (!shift) {
+            return null;
+          }
+
+          return (
+            <UpdateShift
+              handleUpdateShift={(s: Shift) => ScheduleStore.updateShift(schedule.id, s.id, s)}
+              handleDeleteShift={(s: Shift) => ScheduleStore.deleteShift(schedule.id, s.id)}
+              route={props}
+              shift={shift}
+              employees={EmployeeStore.employees}
+            />
+          );
         }} />
 
         <div>

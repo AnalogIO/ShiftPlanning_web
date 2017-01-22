@@ -17,29 +17,47 @@ enum Weekday {
 }
 
 @observer
-export default class AddShift extends Component<any, any> {
+export default class UpdateShift extends Component<any, any> {
   state = {
-    employees: [] as any[],
+    employees: this.props.shift.employees.map((e: any) => {
+      return {
+        id: e.id,
+        text: `${e.firstName} ${e.lastName} (${e.id})`,
+      };
+    }) as any[],
     suggestions: this.props.employees.map((e: Employee) => `${e.firstName} ${e.lastName} (${e.id})`) as string[],
   };
 
-  handleNewShift = (e: any) => {
+  handleUpdateShift = (e: any) => {
     e.preventDefault();
 
-    const { newShift } = this.props;
-    const { params } = this.props.route;
+    const { shift, route } = this.props;
+    const { params } = route;
 
     const { day, week } = params;
     const employeeIds = this.state.employees.map(e => e.id);
 
-    newShift.day = (parseInt(week) - 1) * 7 + parseInt(day);
-    newShift.employeeIds = employeeIds;
+    shift.day = (parseInt(week) - 1) * 7 + parseInt(day);
+    shift.employeeIds = employeeIds;
+    delete shift.employees;
 
-    this.props.handleNewShift(newShift);
+    this.props.handleUpdateShift(shift);
+  }
+
+  handleDeleteShift = (e: any) => {
+    e.preventDefault();
+
+    if (!confirm('Are you sure?')) {
+      return;
+    }
+
+    const { shift } = this.props;
+
+    this.props.handleDeleteShift(shift);
   }
 
   updateProperty = (key: string, value: any) => {
-    this.props.newShift[key] = value;
+    this.props.shift[key] = value;
   }
 
   onChange = (e: any) => {
@@ -71,7 +89,8 @@ export default class AddShift extends Component<any, any> {
   }
 
   render() {
-    const { id, week, day } = this.props.route.params;
+    const { shift, route } = this.props;
+    const { id, week, day } = route.params;
     const { employees, suggestions } = this.state;
 
     return (
@@ -79,18 +98,18 @@ export default class AddShift extends Component<any, any> {
         <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Add shift to {Weekday[day]} Week {week}</p>
+            <p className="modal-card-title">Update shift {Weekday[day]} Week {week}</p>
             <Link to={`/schedules/${id}`} className="delete"></Link>
           </header>
           <section className="modal-card-body">
             <div className="control is-horizontal">
               <div className="control-label"><label className="label">From:</label></div>
-              <div className="control"><input className="input" type="text" placeholder="08:00" name="start" onChange={this.onChange} /></div>
+              <div className="control"><input className="input" type="text" value={shift.start} name="start" onChange={this.onChange} /></div>
             </div>
 
             <div className="control is-horizontal">
               <div className="control-label"><label className="label">To:</label></div>
-              <div className="control"><input className="input" type="text" placeholder="10:00" name="end" onChange={this.onChange} /></div>
+              <div className="control"><input className="input" type="text" value={shift.end} name="end" onChange={this.onChange} /></div>
             </div>
 
             <div className="control is-horizontal">
@@ -114,7 +133,8 @@ export default class AddShift extends Component<any, any> {
             </div>
           </section>
           <footer className="modal-card-foot">
-            <a onClick={this.handleNewShift} className="button is-primary">Add shift</a>
+            <a onClick={this.handleUpdateShift} className="button is-primary">Update shift</a>
+            <a onClick={this.handleDeleteShift} className="button is-danger">Delete shift</a>
             <Link to={`/schedules/${id}`} className="button">Cancel</Link>
           </footer>
         </div>

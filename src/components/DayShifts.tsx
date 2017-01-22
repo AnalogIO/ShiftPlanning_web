@@ -1,6 +1,8 @@
 import React from 'react';
 import { range, has } from 'lodash';
 
+const { Link } = require('react-router');
+
 enum Weekday {
   Monday = 1,
   Tuesday,
@@ -12,13 +14,21 @@ enum Weekday {
 }
 
 export default (props: any) => {
-  const { shifts, day, week } = props;
+  const { schedule, shifts, day, week } = props;
 
   const shift = (shift: any, key: any) => {
     const start = shift.start.split(':', 2).join(':');
     const end = shift.end.split(':', 2).join(':');
 
-    return <div key={key}>{start} - {end}</div>;
+    return (
+      <Link
+        to={`/schedules/${schedule}/${week}/${day}/${shift.id}`}
+        style={{ display: 'block' }}
+        key={key}
+      >
+        {start} - {end}
+      </Link>
+    );
   }
 
   return (

@@ -83,6 +83,8 @@ class EmployeeStore {
 
 export type Schedule = any;
 export type Shift = any;
+export type ScheduleId = number;
+export type ScheduleShiftId = number;
 
 class ScheduleStore {
   @observable schedules = [] as Schedule[];
@@ -98,8 +100,20 @@ class ScheduleStore {
     return this.schedules;
   }
 
-  @action async newShift(id: number, s: Shift) {
+  @action async newShift(id: ScheduleId, s: Shift) {
     const res = await client.post(`/schedules/${id}`, s);
+
+    return res.data;
+  }
+
+  @action async updateShift(id: ScheduleId, sid: ScheduleShiftId, s: Shift) {
+    const res = await client.put(`/schedules/${id}/${sid}`, s);
+
+    return res.data;
+  }
+
+  @action async deleteShift(id: ScheduleId, sid: ScheduleShiftId) {
+    const res = await client.delete(`/schedules/${id}/${sid}`);
 
     return res.data;
   }
