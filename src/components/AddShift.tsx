@@ -21,9 +21,10 @@ export default class AddShift extends Component<any, any> {
   state = {
     employees: [] as any[],
     suggestions: this.props.employees.map((e: Employee) => `${e.firstName} ${e.lastName} (${e.id})`) as string[],
+    created: false,
   };
 
-  handleNewShift = (e: any) => {
+  handleNewShift = async (e: any) => {
     e.preventDefault();
 
     const { newShift } = this.props;
@@ -35,7 +36,11 @@ export default class AddShift extends Component<any, any> {
     newShift.day = (parseInt(week) - 1) * 7 + parseInt(day);
     newShift.employeeIds = employeeIds;
 
-    this.props.handleNewShift(newShift);
+    await this.props.handleNewShift(newShift);
+    this.state.created = true;
+
+    // Not sure why this is necessary
+    this.forceUpdate();
   }
 
   updateProperty = (key: string, value: any) => {
@@ -79,7 +84,7 @@ export default class AddShift extends Component<any, any> {
         <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Add schedule shift to {Weekday[day]} Week {week}</p>
+            <p className="modal-card-title">Add scheduled shift to {Weekday[day]} Week {week}</p>
             <Link to={`/schedules/${id}`} className="delete"></Link>
           </header>
           <section className="modal-card-body">
@@ -114,8 +119,9 @@ export default class AddShift extends Component<any, any> {
             </div>
           </section>
           <footer className="modal-card-foot">
-            <a onClick={this.handleNewShift} className="button is-primary">Add schedule shift</a>
+            <a onClick={this.handleNewShift} className="button is-primary">Add scheduled shift</a>
             <Link to={`/schedules/${id}`} className="button">Cancel</Link>
+            <div>{this.state.created ? 'Schedule shift created!' : ''}</div>
           </footer>
         </div>
       </div>

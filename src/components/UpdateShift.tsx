@@ -30,9 +30,10 @@ export default class UpdateShift extends Component<any, any> {
       };
     }) as any[],
     suggestions: this.props.employees.map((e: Employee) => `${e.firstName} ${e.lastName} (${e.id})`) as string[],
+    updated: false,
   };
 
-  handleUpdateShift = (e: any) => {
+  handleUpdateShift = async (e: any) => {
     e.preventDefault();
 
     const { shift, route } = this.props;
@@ -45,7 +46,11 @@ export default class UpdateShift extends Component<any, any> {
     shift.employeeIds = employeeIds;
     delete shift.employees;
 
-    this.props.handleUpdateShift(shift);
+    await this.props.handleUpdateShift(shift);
+    this.state.updated = true;
+
+    // Not sure why this is necessary
+    this.forceUpdate();
   }
 
   handleDeleteShift = async (e: any) => {
@@ -103,7 +108,7 @@ export default class UpdateShift extends Component<any, any> {
         <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Update schedule shift {Weekday[day]} Week {week}</p>
+            <p className="modal-card-title">Update scheduled shift {Weekday[day]} Week {week}</p>
             <Link to={`/schedules/${id}`} className="delete"></Link>
           </header>
           <section className="modal-card-body">
@@ -138,9 +143,10 @@ export default class UpdateShift extends Component<any, any> {
             </div>
           </section>
           <footer className="modal-card-foot">
-            <a onClick={this.handleUpdateShift} className="button is-primary">Update schedule shift</a>
-            <a onClick={this.handleDeleteShift} className="button is-danger">Delete schedule shift</a>
+            <a onClick={this.handleUpdateShift} className="button is-primary">Update scheduled shift</a>
+            <a onClick={this.handleDeleteShift} className="button is-danger">Delete scheduled shift</a>
             <Link to={`/schedules/${id}`} className="button">Cancel</Link>
+            <div>{this.state.updated ? 'Scheduled shift updated!' : ''}</div>
           </footer>
         </div>
       </div>
