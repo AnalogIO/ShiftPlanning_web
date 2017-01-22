@@ -7,13 +7,22 @@ export interface Manager {
   token: string;
   organizationId: number;
   organizationName: string;
+  expires: number;
+  expiresDate?: string;
 }
 
 class AuthStore {
-  @observable manager: Manager = { token: '', organizationId: 0, organizationName: '' };
+  @observable loggedIn = false;
 
   @computed get isAuthenticated(): boolean {
-    return !!this.manager.token;
+    const manager = JSON.parse(localStorage.getItem('manager'));
+
+    if (manager && new Date() < new Date(manager.expiresDate)) {
+      setAuthorizationToken(manager.token);
+      return manager.token;
+    }
+
+    return this.loggedIn;
   }
 
   // This method expects password to be the plaintext: it will do the hashing
@@ -24,11 +33,15 @@ class AuthStore {
     const res = await client.post('/manager/login', { username, password });
     const manager = res.data as Manager;
 
+    // manager.expires is in seconds but Date.now() is in milliseconds
+    manager.expiresDate = new Date(Date.now() + (manager.expires * 1000)).toISOString();
+    localStorage.setItem('manager', JSON.stringify(manager));
+
     // This HAS to be set first:
     // otherwise components will be rendered before an Authorization token
     // has been set for all future requests!
     setAuthorizationToken(manager.token);
-    this.manager = manager;
+    this.loggedIn = true;
 
     return manager;
   }
