@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 
-import { Employee } from '../stores';
+import { IEmployee } from '../stores';
 
 const { Link } = require('react-router');
 const ReactTags = require('react-tag-input').WithContext;
@@ -20,7 +20,7 @@ enum Weekday {
 export default class AddShift extends Component<any, any> {
   state = {
     employees: [] as any[],
-    suggestions: this.props.employees.map((e: Employee) => `${e.firstName} ${e.lastName} (${e.id})`) as string[],
+    suggestions: this.props.employees.map((e: IEmployee) => `${e.firstName} ${e.lastName} (${e.id})`) as string[],
     created: false,
   };
 

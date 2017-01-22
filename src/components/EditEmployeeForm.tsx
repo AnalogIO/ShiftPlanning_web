@@ -4,10 +4,18 @@ import { observer } from 'mobx-react';
 
 @observer
 export default class EditEmployeeForm extends Component<any, {}> {
+  state = {
+    updated: false,
+  }
+
   onSubmit = (e: any) => {
     e.preventDefault();
-
     this.props.onSubmit(this.props.employee);
+  }
+
+  onDelete = (e: any) => {
+    e.preventDefault();
+    this.props.onDelete(this.props.employee);
   }
 
   updateProperty = (key: string, value: any) => {
@@ -73,9 +81,21 @@ export default class EditEmployeeForm extends Component<any, {}> {
             <input type="file" onChange={this.profilePhoto} />
           </p>
 
-          <p className="control">
-            <button className="button is-primary">Update employee</button>
-          </p>
+          <div className="control is-grouped">
+            <p className="control">
+              <button className="button is-primary">Update employee</button>
+            </p>
+            <p className="control">
+              <button
+                className="button is-danger"
+                onClick={this.onDelete}
+              >
+                Delete employee
+              </button>
+            </p>
+          </div>
+
+          <div>{this.state.updated ? 'Employee has been updated!' : ''}</div>
         </form>
       </div>
     );

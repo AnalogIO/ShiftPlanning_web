@@ -3,6 +3,8 @@ import { range, has } from 'lodash';
 
 const { Link } = require('react-router');
 
+import { IScheduledShift } import 'stores';
+
 enum Weekday {
   Monday = 1,
   Tuesday,

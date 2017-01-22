@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { observer } from 'mobx-react';
 
-import { Employee } from '../stores';
+import { IEmployee } from '../stores';
 
 const { Link } = require('react-router');
 const ReactTags = require('react-tag-input').WithContext;
@@ -29,7 +29,7 @@ export default class UpdateShift extends Component<any, any> {
         text: `${e.firstName} ${e.lastName} (${e.id})`,
       };
     }) as any[],
-    suggestions: this.props.employees.map((e: Employee) => `${e.firstName} ${e.lastName} (${e.id})`) as string[],
+    suggestions: this.props.employees.map((e: IEmployee) => `${e.firstName} ${e.lastName} (${e.id})`) as string[],
     updated: false,
   };
 

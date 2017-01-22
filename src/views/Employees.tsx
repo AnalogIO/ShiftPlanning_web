@@ -9,6 +9,8 @@ import Employee from 'components/Employee';
 import EditEmployeeForm from 'components/EditEmployeeForm';
 import NewEmployeeForm from 'components/NewEmployeeForm';
 
+import { IEmployee } from 'stores';
+
 @inject('stores') @observer
 export default class Employees extends Component<any, {}> {
   // declare it as `action` for the implicit transaction
@@ -38,7 +40,7 @@ export default class Employees extends Component<any, {}> {
       return <h1 className="title">Getting employees...</h1>
     }
 
-    const employees = EmployeeStore.employees.map((e: any, i: any) => (
+    const employees = EmployeeStore.employees.map((e: IEmployee, i: number) => (
       <Link key={i} className="column is-3" to={`${pathname}/${e.id}`}>
         <Employee employee={e} />
       </Link>
@@ -51,15 +53,28 @@ export default class Employees extends Component<any, {}> {
           const employee = EmployeeStore.getEmployee(props.params.id);
           if (!employee) { return null; }
 
-          return <EditEmployeeForm onSubmit={(e: any) => EmployeeStore.updateEmployee(e)} employee={employee} titles={titles} />
+          return (
+            <EditEmployeeForm
+              onSubmit={(e: IEmployee) => EmployeeStore.updateEmployee(e)}
+              onDelete={(e: IEmployee) => EmployeeStore.deleteEmployee(e)}
+              employee={employee}
+              titles={titles}
+            />
+          );
         }} />
 
         <Match pattern={`${pathname}/new`} render={(props: any) => {
           const titles = EmployeeStore.titles;
 
-          const employee = {} as any;
+          const employee = {} as IEmployee;
 
-          return <NewEmployeeForm onSubmit={(e: any) => EmployeeStore.createEmployee(e)} newEmployee={employee} titles={titles} />
+          return (
+            <NewEmployeeForm
+              onSubmit={(e: IEmployee) => EmployeeStore.createEmployee(e)}
+              newEmployee={employee}
+              titles={titles}
+            />
+          );
         }} />
 
         <h1 className="title">Employees {newEmployeeLink}</h1>

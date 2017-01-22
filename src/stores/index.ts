@@ -3,7 +3,7 @@ import { observable, computed, action } from 'mobx';
 import * as _ from 'lodash';
 import client, { setAuthorizationToken } from 'api';
 
-export interface Manager {
+export interface IManager {
   token: string;
   organizationId: number;
   organizationName: string;
@@ -26,12 +26,12 @@ class AuthStore {
   }
 
   // This method expects password to be the plaintext: it will do the hashing
-  @action async login(username: string, password: string): Promise<Manager> {
+  @action async login(username: string, password: string): Promise<IManager> {
     username = username.trim();
     password = createHash('sha256').update(password).digest('base64');
 
     const res = await client.post('/manager/login', { username, password });
-    const manager = res.data as Manager;
+    const manager = res.data as IManager;
 
     // manager.expires is in seconds but Date.now() is in milliseconds
     manager.expiresDate = new Date(Date.now() + (manager.expires * 1000)).toISOString();
@@ -47,15 +47,15 @@ class AuthStore {
   }
 };
 
-export type Employee = any;
-export type EmployeeTitle = any;
+export type IEmployee = any;
+export type IEmployeeTitle = any;
 
 class EmployeeStore {
-  @observable employees: Employee[] = [];
-  @observable titles: EmployeeTitle[] = [];
+  @observable employees: IEmployee[] = [];
+  @observable titles: IEmployeeTitle[] = [];
 
-  getEmployee(id: number): Employee | null {
-    const employee = _.find(this.employees, (e: any) => e.id == id);
+  getEmployee(id: number): IEmployee | null {
+    const employee = _.find(this.employees, (e) => e.id == id);
 
     // `find` returns the value or undefined but by returning null instead we
     // can get strictNullChecks
@@ -64,45 +64,49 @@ class EmployeeStore {
 
   @action async getTitles() {
     const res = await client.get('/employeetitles');
-    this.titles = res.data as EmployeeTitle[];
+    this.titles = res.data as IEmployeeTitle[];
   }
 
   @action async getEmployees() {
     const res = await client.get('/employees')
-    const data = res.data as Employee[];
+    const data = res.data as IEmployee[];
     const employees = _.sortBy(data, ['firstName', 'lastName']);
-    this.employees = employees as Employee[];
+    this.employees = employees as IEmployee[];
   }
 
-  async createEmployee(employee: Employee) {
+  async createEmployee(employee: IEmployee) {
     return client.post('/employees', employee);
   }
 
-  async updateEmployee(employee: Employee) {
+  async updateEmployee(employee: IEmployee) {
     return client.put(`/employees/${employee.id}`, employee);
+  }
+
+  async deleteEmployee(employee: IEmployee) {
+    return client.delete(`/employees/${employee.id}`);
   }
 }
 
-export type Schedule = any;
-export type Shift = any;
-export type ScheduleId = number;
-export type ScheduleShiftId = number;
+export type ISchedule = any;
+export type IShift = any;
+export type IScheduleId = number;
+export type IScheduledShiftId = number;
 
 class ScheduleStore {
-  @observable schedules = [] as Schedule[];
+  @observable schedules = [] as ISchedule[];
 
-  getById(id: number): Schedule | null {
+  getById(id: number): ISchedule | null {
     return _.find(this.schedules, (s) => id == s.id) || null;
   }
 
   @action async getSchedules() {
     const res = await client.get('/schedules');
 
-    this.schedules = res.data as Schedule[];
+    this.schedules = res.data as ISchedule[];
     return this.schedules;
   }
 
-  @action async newShift(id: ScheduleId, s: Shift) {
+  @action async newShift(id: IScheduleId, s: IShift) {
     // there is a bug here
     // for some reason id is a string
     id = parseInt(String(id));
@@ -114,21 +118,21 @@ class ScheduleStore {
     return res.data;
   }
 
-  @action async updateShift(id: ScheduleId, sid: ScheduleShiftId, s: Shift) {
+  @action async updateShift(id: IScheduleId, sid: IScheduledShiftId, s: IShift) {
     const res = await client.put(`/schedules/${id}/${sid}`, s);
 
     const schedule = _.find(this.schedules, ['id', id]);
-    const shiftIndex = _.findIndex(schedule.scheduledShifts, (s: Shift) => s.id == sid);
+    const shiftIndex = _.findIndex(schedule.scheduledShifts, (s: IShift) => s.id == sid);
     _.set(schedule.scheduledShifts, shiftIndex, s);
 
     return res.data;
   }
 
-  @action async deleteShift(id: ScheduleId, sid: ScheduleShiftId) {
+  @action async deleteShift(id: IScheduleId, sid: IScheduledShiftId) {
     const res = await client.delete(`/schedules/${id}/${sid}`);
 
     const schedule = _.find(this.schedules, ['id', id]);
-    _.remove(schedule.scheduledShifts, (s: Shift) => s.id == sid);
+    _.remove(schedule.scheduledShifts, (s: IShift) => s.id == sid);
 
     return res.data;
   }

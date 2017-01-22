@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { action } from 'mobx';
 import * as _ from 'lodash';
 
-import { Shift } from '../stores';
+import { IShift } from '../stores';
 
 const { Link, Match } = require('react-router');
 
@@ -43,11 +43,11 @@ export default class Schedules extends Component<any, {}> {
         )} />
 
         <Match pattern={`${pathname}/:id/:week/:day/new`} render={(props: any) => {
-          const shift = {} as Shift;
+          const shift = {} as IShift;
           const id = props.params.id;
           return (
             <AddShift
-              handleNewShift={(s: Shift) => ScheduleStore.newShift(id, s)}
+              handleNewShift={(s: IShift) => ScheduleStore.newShift(id, s)}
               route={props}
               newShift={shift}
               employees={EmployeeStore.employees}
@@ -80,8 +80,8 @@ export default class Schedules extends Component<any, {}> {
 
           return (
             <UpdateShift
-              handleUpdateShift={(s: Shift) => ScheduleStore.updateShift(schedule.id, s.id, s)}
-              handleDeleteShift={(s: Shift) => ScheduleStore.deleteShift(schedule.id, s.id)}
+              handleUpdateShift={(s: IShift) => ScheduleStore.updateShift(schedule.id, s.id, s)}
+              handleDeleteShift={(s: IShift) => ScheduleStore.deleteShift(schedule.id, s.id)}
               route={props}
               shift={shift}
               employees={EmployeeStore.employees}
