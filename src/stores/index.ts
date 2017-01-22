@@ -101,13 +101,23 @@ class ScheduleStore {
   }
 
   @action async newShift(id: ScheduleId, s: Shift) {
+    // there is a bug here
+    // for some reason id is a string
+    id = parseInt(String(id));
     const res = await client.post(`/schedules/${id}`, s);
+
+    const schedule = _.find(this.schedules, ['id', id]);
+    schedule.scheduledShifts.push(s);
 
     return res.data;
   }
 
   @action async updateShift(id: ScheduleId, sid: ScheduleShiftId, s: Shift) {
     const res = await client.put(`/schedules/${id}/${sid}`, s);
+
+    const schedule = _.find(this.schedules, ['id', id]);
+    const shiftIndex = _.findIndex(schedule.scheduledShifts, (s: Shift) => s.id == sid);
+    _.set(schedule.scheduledShifts, shiftIndex, s);
 
     return res.data;
   }
@@ -116,7 +126,7 @@ class ScheduleStore {
     const res = await client.delete(`/schedules/${id}/${sid}`);
 
     const schedule = _.find(this.schedules, ['id', id]);
-    const removed = _.remove(schedule.scheduledShifts, (s: Shift) => s.id == sid);
+    _.remove(schedule.scheduledShifts, (s: Shift) => s.id == sid);
 
     return res.data;
   }
