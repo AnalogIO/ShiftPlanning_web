@@ -98,7 +98,7 @@ export default class UpdateShift extends Component<any, any> {
         <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Update shift {Weekday[day]} Week {week}</p>
+            <p className="modal-card-title">Update schedule shift {Weekday[day]} Week {week}</p>
             <Link to={`/schedules/${id}`} className="delete"></Link>
           </header>
           <section className="modal-card-body">
@@ -133,8 +133,8 @@ export default class UpdateShift extends Component<any, any> {
             </div>
           </section>
           <footer className="modal-card-foot">
-            <a onClick={this.handleUpdateShift} className="button is-primary">Update shift</a>
-            <a onClick={this.handleDeleteShift} className="button is-danger">Delete shift</a>
+            <a onClick={this.handleUpdateShift} className="button is-primary">Update schedule shift</a>
+            <a onClick={this.handleDeleteShift} className="button is-danger">Delete schedule shift</a>
             <Link to={`/schedules/${id}`} className="button">Cancel</Link>
           </footer>
         </div>

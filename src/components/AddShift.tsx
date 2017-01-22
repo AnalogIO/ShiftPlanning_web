@@ -79,7 +79,7 @@ export default class AddShift extends Component<any, any> {
         <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Add shift to {Weekday[day]} Week {week}</p>
+            <p className="modal-card-title">Add schedule shift to {Weekday[day]} Week {week}</p>
             <Link to={`/schedules/${id}`} className="delete"></Link>
           </header>
           <section className="modal-card-body">
@@ -114,7 +114,7 @@ export default class AddShift extends Component<any, any> {
             </div>
           </section>
           <footer className="modal-card-foot">
-            <a onClick={this.handleNewShift} className="button is-primary">Add shift</a>
+            <a onClick={this.handleNewShift} className="button is-primary">Add schedule shift</a>
             <Link to={`/schedules/${id}`} className="button">Cancel</Link>
           </footer>
         </div>
