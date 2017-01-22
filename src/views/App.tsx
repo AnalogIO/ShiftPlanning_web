@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { observable } from 'mobx';
 
-const { Link, Match } = require('react-router');
+const { Link, Match, Redirect } = require('react-router');
 
 import Employees from 'views/Employees';
 import Schedules from 'views/Schedules';
@@ -38,6 +38,7 @@ export default class App extends Component<any, {}> {
               <Match pattern="/employees" component={Employees} />
               <Match pattern="/schedules" component={Schedules} />
               <Match pattern="/shifts" component={Shifts} />
+              <Match pattern="/" exactly render={() => <Redirect to="/shifts"/> }/>
             </div>
           </section>
         </div>
