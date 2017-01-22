@@ -6,6 +6,7 @@ const { Link, Match } = require('react-router');
 
 import Employees from 'views/Employees';
 import Schedules from 'views/Schedules';
+import Shifts from 'views/Shifts';
 import LoginContainer from 'containers/Login';
 import NavLink from 'components/NavLink';
 
@@ -36,6 +37,7 @@ export default class App extends Component<any, {}> {
             <div className="container">
               <Match pattern="/employees" component={Employees} />
               <Match pattern="/schedules" component={Schedules} />
+              <Match pattern="/shifts" component={Shifts} />
             </div>
           </section>
         </div>

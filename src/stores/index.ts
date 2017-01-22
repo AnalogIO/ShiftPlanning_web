@@ -96,7 +96,6 @@ class EmployeeStore {
 }
 
 export type ISchedule = any;
-export type IShift = any;
 export type IScheduleId = number;
 export type IScheduledShiftId = number;
 
@@ -169,10 +168,24 @@ class ScheduleStore {
   }
 }
 
+export type IShift = any;
+
+class ShiftStore {
+  @observable shifts = [] as IShift[];
+
+  @action async getShifts(): Promise<IShift[]> {
+    const res = await client.get('/shifts');
+
+    this.shifts = res.data as IShift[];
+    return this.shifts;
+  }
+}
+
 const stores = {
   AuthStore: new AuthStore(),
   EmployeeStore: new EmployeeStore(),
   ScheduleStore: new ScheduleStore(),
+  ShiftStore: new ShiftStore(),
 };
 
 export default stores;
