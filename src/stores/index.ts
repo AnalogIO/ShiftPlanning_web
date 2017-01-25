@@ -200,8 +200,6 @@ class ShiftStore {
       end: shift.end,
     });
 
-    this.shifts.push(shift);
-
     return res.data;
   }
 

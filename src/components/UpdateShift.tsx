@@ -15,14 +15,15 @@ function getParameterByName(name: string, url?: string): string {
 }
 
 import React, { Component, PropTypes } from 'react';
-import { observer } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
+import _ from 'lodash';
 
 import { IEmployee } from '../stores';
 
 const { Link } = require('react-router');
 const ReactTags = require('react-tag-input').WithContext;
 
-@observer
+@inject('stores') @observer
 export default class UpdateShift extends Component<any, any> {
   static contextTypes = {
     router: PropTypes.object
@@ -42,6 +43,8 @@ export default class UpdateShift extends Component<any, any> {
   handleUpdateShift = async (e: any) => {
     e.preventDefault();
 
+    const { EmployeeStore } = this.props.stores;
+
     const { shift } = this.props;
     const { start, end } = shift;
     const startTime = shift.startTime || moment(shift.start).format('HH:mm');
@@ -51,10 +54,13 @@ export default class UpdateShift extends Component<any, any> {
     const sd = moment(moment(shift.start).format('YYYY-DD-MM ') + startTime + moment().format(' ZZ'), 'YYYY-DD-MM HH:mm ZZ');
     const ed = moment(moment(shift.end).format('YYYY-DD-MM ') + endTime + moment().format(' ZZ'), 'YYYY-DD-MM HH:mm ZZ');
     const employeeIds = this.state.employees.map(e => e.id);
+    const es = await EmployeeStore.getEmployees();
+    const employees = employeeIds.map(id => _.find(es, (e: any) => e.id == id));
 
     this.updateProperty('start', sd.toISOString());
     this.updateProperty('end', ed.toISOString());
     this.updateProperty('employeeIds', employeeIds);
+    this.updateProperty('employees', employees);
 
     await this.props.handleUpdateShift(shift);
     this.setState({

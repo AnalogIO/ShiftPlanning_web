@@ -1,3 +1,4 @@
+declare var moment: any;
 declare var $: any;
 
 import React, { Component, PropTypes } from 'react';
@@ -98,7 +99,15 @@ export default class Shifts extends Component<any, {}> {
             route={props}
             employees={this.state.employees}
             shift={shift}
-            handleUpdateShift={(s: any) => ShiftStore.updateShift(s)}
+            handleUpdateShift={async (s: any) => {
+              await ShiftStore.updateShift(s);
+              const [shift] = $('#calendar').fullCalendar('clientEvents', [s.id]);
+              shift.title = s.employees.map((e: any) => e.firstName).join(', ');
+              shift.start = moment(s.start).format('YYYY-MM-DD HH:mm');
+              shift.end = moment(s.end).format('YYYY-MM-DD HH:mm');
+              shift.employees = s.employees;
+              $('#calendar').fullCalendar('updateEvent', shift);
+            }}
             handleDeleteShift={async (s: any) => {
               await ShiftStore.deleteShift(s)
               $('#calendar').fullCalendar('removeEvents', [s.id]);

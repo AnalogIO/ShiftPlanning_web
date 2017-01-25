@@ -45,6 +45,7 @@ export default class AddShift extends Component<any, any> {
       end: ed.toISOString(),
       employeeIds,
     });
+
     this.setState({
       created: true,
     });
