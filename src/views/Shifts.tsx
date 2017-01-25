@@ -42,7 +42,7 @@ export default class Shifts extends Component<any, {}> {
       weekNumbersWithinDays: true,
       fixedWeekCount: false,
       events: shifts,
-      timeFormat: 'HH:mm',
+      slotLabelFormat: 'HH:mm',
       contentHeight: calendarHeight,
       header: {
         right: 'today month,agendaWeek prev,next',
@@ -54,9 +54,15 @@ export default class Shifts extends Component<any, {}> {
         const year = date.year();
         const month = date.month() + 1;
         const day = date.date();
+        const hours = date.hours() === 0 ? null : date.hours();
+        const minutes = date.minutes();
+        let path = `/shifts/add?year=${year}&month=${month}&day=${day}`;
 
-        this.context.router
-          .transitionTo(`/shifts/add?year=${year}&month=${month}&day=${day}`);
+        if (hours) {
+          path += `&hours=${hours}&minutes=${minutes}`;
+        }
+
+        this.context.router.transitionTo(path);
       },
     });
   }

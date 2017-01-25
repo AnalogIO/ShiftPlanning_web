@@ -82,7 +82,15 @@ export default class AddShift extends Component<any, any> {
     const year = getParameterByName('year');
     const month = getParameterByName('month');
     const day = getParameterByName('day');
-    const date = moment(`${year}-${month}-${day}`, 'YYYY-MM-DD');
+    const hours = getParameterByName('hours');
+    const minutes = getParameterByName('minutes');
+    const m = moment();
+    let date = moment(`${year}-${month}-${day}`, 'YYYY-MM-DD');
+
+    if (hours) {
+      date = moment(`${year}-${month}-${day} ${hours}:${minutes} ${m.format('ZZ')}`, 'YYYY-MM-DD HH:mm ZZ');
+    }
+
     const { employees, suggestions } = this.state;
 
     return (
@@ -96,12 +104,18 @@ export default class AddShift extends Component<any, any> {
           <section className="modal-card-body">
             <div className="control is-horizontal">
               <div className="control-label"><label className="label">From:</label></div>
-              <div className="control"><input className="input" type="text" placeholder="08:00" name="start" onChange={this.onChange} /></div>
+              <div className="control">{hours
+                ? <input className="input" type="text" name="start" value={date.format('HH:mm')} onChange={this.onChange} />
+                : <input className="input" type="text" placeholder="08:00" name="start" onChange={this.onChange} />
+              }</div>
             </div>
 
             <div className="control is-horizontal">
               <div className="control-label"><label className="label">To:</label></div>
-              <div className="control"><input className="input" type="text" placeholder="10:00" name="end" onChange={this.onChange} /></div>
+              <div className="control">{hours
+                ? <input className="input" type="text" name="start" value={date.add(2, 'hours').format('HH:mm')} onChange={this.onChange} />
+                : <input className="input" type="text" placeholder="10:00" name="start" onChange={this.onChange} />
+              }</div>
             </div>
 
             <div className="control is-horizontal">
@@ -125,7 +139,7 @@ export default class AddShift extends Component<any, any> {
             </div>
           </section>
           <footer className="modal-card-foot">
-            <a onClick={this.handleNewShift} className="button is-primary">Add scheduled shift</a>
+            <a onClick={this.handleNewShift} className="button is-primary">Add shift</a>
             <Link to="/shifts" className="button">Cancel</Link>
           </footer>
         </div>
