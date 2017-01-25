@@ -68,10 +68,16 @@ class EmployeeStore {
   }
 
   @action async getEmployees() {
+    if (this.employees.length) {
+      return this.employees;
+    }
+
     const res = await client.get('/employees')
     const data = res.data as IEmployee[];
     const employees = _.sortBy(data, ['firstName', 'lastName']);
     this.employees = employees as IEmployee[];
+
+    return this.employees;
   }
 
   async createEmployee(employee: IEmployee) {
@@ -178,6 +184,13 @@ class ShiftStore {
 
     this.shifts = res.data as IShift[];
     return this.shifts;
+  }
+
+  @action async addShift(s: any) {
+    const res = await client.post('/shifts', s);
+
+    this.shifts.push(s);
+    return res.data;
   }
 }
 

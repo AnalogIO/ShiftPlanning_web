@@ -1,20 +1,4 @@
-declare var moment: any;
-
-function getParameterByName(name: string, url?: string): string {
-  if (!url) {
-    url = window.location.href;
-  }
-
-  name = name.replace(/[\[\]]/g, "\\$&");
-  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
-  var results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return '';
-
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
-
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { observer } from 'mobx-react';
 
 import { IEmployee } from '../stores';
@@ -22,32 +6,68 @@ import { IEmployee } from '../stores';
 const { Link } = require('react-router');
 const ReactTags = require('react-tag-input').WithContext;
 
+enum Weekday {
+  Monday = 1,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+  Sunday,
+}
+
 @observer
-export default class AddShift extends Component<any, any> {
-  state = {
-    employees: [] as any[],
-    suggestions: this.props.employees.map((e: IEmployee) => `${e.firstName} ${e.lastName} (${e.id})`) as string[],
+export default class UpdatedScheduledShift extends Component<any, any> {
+  static contextTypes = {
+    router: PropTypes.object
   };
 
-  handleNewShift = async (e: any) => {
+  state = {
+    employees: this.props.shift.employees.map((e: any) => {
+      return {
+        id: e.id,
+        text: `${e.firstName} ${e.lastName} (${e.id})`,
+      };
+    }) as any[],
+    suggestions: this.props.employees.map((e: IEmployee) => `${e.firstName} ${e.lastName} (${e.id})`) as string[],
+    updated: false,
+  };
+
+  handleUpdateShift = async (e: any) => {
     e.preventDefault();
 
-    const { date, newShift } = this.props;
-    const { start, end } = newShift;
-    const offset = date.utcOffset() / 60;
-    const sd = moment(date.format('YYYY-DD-MM ') + start + moment().format(' ZZ'), 'YYYY-DD-MM HH:mm ZZ');
-    const ed = moment(date.format('YYYY-DD-MM ') + end + moment().format(' ZZ'), 'YYYY-DD-MM HH:mm ZZ');
+    const { shift, route } = this.props;
+    const { params } = route;
+
+    const { day, week } = params;
     const employeeIds = this.state.employees.map(e => e.id);
 
-    this.props.onSubmit({
-      start: sd.toISOString(),
-      end: ed.toISOString(),
-      employeeIds,
+    shift.day = (parseInt(week) - 1) * 7 + parseInt(day);
+    shift.employeeIds = employeeIds;
+    delete shift.employees;
+
+    await this.props.handleUpdateShift(shift);
+
+    this.setState({
+      updated: true,
     });
   }
 
+  handleDeleteShift = async (e: any) => {
+    e.preventDefault();
+
+    if (!confirm('Are you sure?')) {
+      return;
+    }
+
+    const { shift, route } = this.props;
+
+    await this.props.handleDeleteShift(shift)
+    this.context.router.transitionTo(`/schedules/${route.params.id}`);
+  }
+
   updateProperty = (key: string, value: any) => {
-    this.props.newShift[key] = value;
+    this.props.shift[key] = value;
   }
 
   onChange = (e: any) => {
@@ -79,10 +99,8 @@ export default class AddShift extends Component<any, any> {
   }
 
   render() {
-    const year = getParameterByName('year');
-    const month = getParameterByName('month');
-    const day = getParameterByName('day');
-    const date = moment(`${year}-${month}-${day}`, 'YYYY-MM-DD');
+    const { shift, route } = this.props;
+    const { id, week, day } = route.params;
     const { employees, suggestions } = this.state;
 
     return (
@@ -90,18 +108,18 @@ export default class AddShift extends Component<any, any> {
         <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Adding shift to {date.format('YYYY-MM-DD')}</p>
-            <Link to="/shifts" className="delete"></Link>
+            <p className="modal-card-title">Update scheduled shift {Weekday[day]} Week {week}</p>
+            <Link to={`/schedules/${id}`} className="delete"></Link>
           </header>
           <section className="modal-card-body">
             <div className="control is-horizontal">
               <div className="control-label"><label className="label">From:</label></div>
-              <div className="control"><input className="input" type="text" placeholder="08:00" name="start" onChange={this.onChange} /></div>
+              <div className="control"><input className="input" type="text" value={shift.start} name="start" onChange={this.onChange} /></div>
             </div>
 
             <div className="control is-horizontal">
               <div className="control-label"><label className="label">To:</label></div>
-              <div className="control"><input className="input" type="text" placeholder="10:00" name="end" onChange={this.onChange} /></div>
+              <div className="control"><input className="input" type="text" value={shift.end} name="end" onChange={this.onChange} /></div>
             </div>
 
             <div className="control is-horizontal">
@@ -125,8 +143,10 @@ export default class AddShift extends Component<any, any> {
             </div>
           </section>
           <footer className="modal-card-foot">
-            <a onClick={this.handleNewShift} className="button is-primary">Add scheduled shift</a>
-            <Link to="/shifts" className="button">Cancel</Link>
+            <a onClick={this.handleUpdateShift} className="button is-primary">Update scheduled shift</a>
+            <a onClick={this.handleDeleteShift} className="button is-danger">Delete scheduled shift</a>
+            <Link to={`/schedules/${id}`} className="button">Cancel</Link>
+            <div>{this.state.updated ? 'Scheduled shift updated!' : ''}</div>
           </footer>
         </div>
       </div>

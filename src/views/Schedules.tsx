@@ -8,8 +8,8 @@ import { IShift, ISchedule } from '../stores';
 const { Link, Match } = require('react-router');
 
 import Schedule from 'components/Schedule';
-import AddShift from 'components/AddShift';
-import UpdateShift from 'components/UpdateShift';
+import AddScheduledShift from 'components/AddScheduledShift';
+import UpdateScheduledShift from 'components/UpdateScheduledShift';
 import NewScheduleForm from 'components/NewScheduleForm';
 import RolloutForm from 'components/RolloutForm';
 
@@ -78,7 +78,7 @@ export default class Schedules extends Component<any, {}> {
           const shift = {} as IShift;
           const id = props.params.id;
           return (
-            <AddShift
+            <AddScheduledShift
               handleNewShift={(s: IShift) => ScheduleStore.newShift(id, s)}
               route={props}
               newShift={shift}
@@ -111,7 +111,7 @@ export default class Schedules extends Component<any, {}> {
           }
 
           return (
-            <UpdateShift
+            <UpdateScheduledShift
               handleUpdateShift={(s: IShift) => ScheduleStore.updateShift(schedule.id, s.id, s)}
               handleDeleteShift={(s: IShift) => ScheduleStore.deleteShift(schedule.id, s.id)}
               route={props}

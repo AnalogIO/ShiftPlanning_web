@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 
 import { IEmployee } from '../stores';
@@ -17,57 +17,34 @@ enum Weekday {
 }
 
 @observer
-export default class UpdateShift extends Component<any, any> {
-  static contextTypes = {
-    router: PropTypes.object
-  }
-
+export default class AddScheduledShift extends Component<any, any> {
   state = {
-    employees: this.props.shift.employees.map((e: any) => {
-      return {
-        id: e.id,
-        text: `${e.firstName} ${e.lastName} (${e.id})`,
-      };
-    }) as any[],
+    employees: [] as any[],
     suggestions: this.props.employees.map((e: IEmployee) => `${e.firstName} ${e.lastName} (${e.id})`) as string[],
-    updated: false,
+    created: false,
   };
 
-  handleUpdateShift = async (e: any) => {
+  handleNewShift = async (e: any) => {
     e.preventDefault();
 
-    const { shift, route } = this.props;
-    const { params } = route;
+    const { newShift } = this.props;
+    const { params } = this.props.route;
 
     const { day, week } = params;
     const employeeIds = this.state.employees.map(e => e.id);
 
-    shift.day = (parseInt(week) - 1) * 7 + parseInt(day);
-    shift.employeeIds = employeeIds;
-    delete shift.employees;
+    newShift.day = (parseInt(week) - 1) * 7 + parseInt(day);
+    newShift.employeeIds = employeeIds;
 
-    await this.props.handleUpdateShift(shift);
+    await this.props.handleNewShift(newShift);
 
     this.setState({
       updated: true,
     });
   }
 
-  handleDeleteShift = async (e: any) => {
-    e.preventDefault();
-
-    if (!confirm('Are you sure?')) {
-      return;
-    }
-
-    const { shift, route } = this.props;
-
-    await this.props.handleDeleteShift(shift)
-    this.context.router.transitionTo(`/schedules/${route.params.id}`);
-  }
-
   updateProperty = (key: string, value: any) => {
-    this.props.shift[key] = value;
+    this.props.newShift[key] = value;
   }
 
   onChange = (e: any) => {
@@ -99,8 +76,7 @@ export default class UpdateShift extends Component<any, any> {
   }
 
   render() {
-    const { shift, route } = this.props;
-    const { id, week, day } = route.params;
+    const { id, week, day } = this.props.route.params;
     const { employees, suggestions } = this.state;
 
     return (
@@ -108,18 +84,18 @@ export default class UpdateShift extends Component<any, any> {
         <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Update scheduled shift {Weekday[day]} Week {week}</p>
+            <p className="modal-card-title">Add scheduled shift to {Weekday[day]} Week {week}</p>
             <Link to={`/schedules/${id}`} className="delete"></Link>
           </header>
           <section className="modal-card-body">
             <div className="control is-horizontal">
               <div className="control-label"><label className="label">From:</label></div>
-              <div className="control"><input className="input" type="text" value={shift.start} name="start" onChange={this.onChange} /></div>
+              <div className="control"><input className="input" type="text" placeholder="08:00" name="start" onChange={this.onChange} /></div>
             </div>
 
             <div className="control is-horizontal">
               <div className="control-label"><label className="label">To:</label></div>
-              <div className="control"><input className="input" type="text" value={shift.end} name="end" onChange={this.onChange} /></div>
+              <div className="control"><input className="input" type="text" placeholder="10:00" name="end" onChange={this.onChange} /></div>
             </div>
 
             <div className="control is-horizontal">
@@ -143,10 +119,9 @@ export default class UpdateShift extends Component<any, any> {
             </div>
           </section>
           <footer className="modal-card-foot">
-            <a onClick={this.handleUpdateShift} className="button is-primary">Update scheduled shift</a>
-            <a onClick={this.handleDeleteShift} className="button is-danger">Delete scheduled shift</a>
+            <a onClick={this.handleNewShift} className="button is-primary">Add scheduled shift</a>
             <Link to={`/schedules/${id}`} className="button">Cancel</Link>
-            <div>{this.state.updated ? 'Scheduled shift updated!' : ''}</div>
+            <div>{this.state.created ? 'Schedule shift created!' : ''}</div>
           </footer>
         </div>
       </div>

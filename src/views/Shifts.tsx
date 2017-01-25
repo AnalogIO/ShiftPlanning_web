@@ -1,15 +1,30 @@
 declare var $: any;
 
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { inject, observer } from 'mobx-react';
 import { action } from 'mobx';
 
-import { IShift } from 'stores';
+const { Link, Match, Redirect } = require('react-router');
+
+import AddShift from 'components/AddShift';
+import { IEmployee, IShift } from 'stores';
 
 @inject('stores') @observer
 export default class Shifts extends Component<any, {}> {
+  static contextTypes = {
+    router: PropTypes.object
+  };
+
+  state = {
+    employees: [] as IEmployee[],
+  };
+
   @action async componentDidMount() {
-    const { ShiftStore } = this.props.stores;
+    const { EmployeeStore, ShiftStore } = this.props.stores;
+
+    this.setState({
+      employees: await EmployeeStore.getEmployees(),
+    });
 
     const shifts = (await ShiftStore.getShifts())
       .map((s: IShift) => {
@@ -35,10 +50,32 @@ export default class Shifts extends Component<any, {}> {
       eventClick(e: any) {
         console.log(JSON.stringify(e.employees, null, 4));
       },
+      dayClick: (date: any) => { // moment object
+        const year = date.year();
+        const month = date.month() + 1;
+        const day = date.date();
+
+        this.context.router
+          .transitionTo(`/shifts/add?year=${year}&month=${month}&day=${day}`);
+      },
     });
   }
 
   render() {
-    return <div id="calendar"></div>
+    const { ShiftStore } = this.props.stores;
+
+    return (
+      <div>
+        <div id="calendar"></div>
+        <Match pattern="/shifts/add" render={(props: any) => (
+          <AddShift
+            route={props}
+            employees={this.state.employees}
+            newShift={{} as any}
+            onSubmit={(s: any) => ShiftStore.addShift(s)}
+          />
+        )} />
+      </div>
+    );
   }
 }
