@@ -27,7 +27,7 @@ export default class App extends Component<any, {}> {
               <NavLink to="/shifts">Shifts</NavLink>
               <NavLink to="/schedules">Schedules</NavLink>
               <NavLink to="/employees">Employees</NavLink>
-              <NavLink to="/organization">Organization</NavLink>
+              {/* <NavLink to="/organization">Organization</NavLink> */}
             </div>
 
             <div className="nav-right"></div>
