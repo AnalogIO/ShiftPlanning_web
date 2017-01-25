@@ -27,6 +27,7 @@ export default class AddShift extends Component<any, any> {
   state = {
     employees: [] as any[],
     suggestions: this.props.employees.map((e: IEmployee) => `${e.firstName} ${e.lastName} (${e.id})`) as string[],
+    created: false,
   };
 
   handleNewShift = async (e: any) => {
@@ -39,10 +40,13 @@ export default class AddShift extends Component<any, any> {
     const ed = moment(date.format('YYYY-DD-MM ') + end + moment().format(' ZZ'), 'YYYY-DD-MM HH:mm ZZ');
     const employeeIds = this.state.employees.map(e => e.id);
 
-    this.props.onSubmit({
+    await this.props.onSubmit({
       start: sd.toISOString(),
       end: ed.toISOString(),
       employeeIds,
+    });
+    this.setState({
+      created: true,
     });
   }
 
@@ -141,6 +145,7 @@ export default class AddShift extends Component<any, any> {
           <footer className="modal-card-foot">
             <a onClick={this.handleNewShift} className="button is-primary">Add shift</a>
             <Link to="/shifts" className="button">Cancel</Link>
+            <div>{this.state.created ? 'The shift has been created!' : ''}</div>
           </footer>
         </div>
       </div>

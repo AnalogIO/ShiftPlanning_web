@@ -36,6 +36,7 @@ export default class UpdateShift extends Component<any, any> {
       };
     }) as any[],
     suggestions: this.props.employees.map((e: IEmployee) => `${e.firstName} ${e.lastName} (${e.id})`) as string[],
+    updated: false,
   };
 
   handleUpdateShift = async (e: any) => {
@@ -55,7 +56,10 @@ export default class UpdateShift extends Component<any, any> {
     this.updateProperty('end', ed.toISOString());
     this.updateProperty('employeeIds', employeeIds);
 
-    this.props.handleUpdateShift(shift);
+    await this.props.handleUpdateShift(shift);
+    this.setState({
+      updated: true,
+    });
   }
 
   handleDeleteShift = async (e: any) => {
@@ -154,6 +158,7 @@ export default class UpdateShift extends Component<any, any> {
             <a onClick={this.handleUpdateShift} className="button is-primary">Update shift</a>
             <a onClick={this.handleDeleteShift} className="button is-danger">Delete shift</a>
             <Link to="/shifts" className="button">Cancel</Link>
+            <div>{this.state.updated ? 'The shift has been updated!' : ''}</div>
           </footer>
         </div>
       </div>
