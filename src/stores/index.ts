@@ -186,11 +186,35 @@ class ShiftStore {
     return this.shifts;
   }
 
-  @action async addShift(s: any) {
-    const res = await client.post('/shifts', s);
+  @action async addShift(shift: IShift) {
+    const res = await client.post('/shifts', shift);
 
-    this.shifts.push(s);
+    this.shifts.push(shift);
     return res.data;
+  }
+
+  @action async updateShift(shift: IShift) {
+    const res = await client.put(`/shifts/${shift.id}`, {
+      employeeIds: shift.employees.map((s: any) => s.id),
+      start: shift.start,
+      end: shift.end,
+    });
+
+    this.shifts.push(shift);
+
+    return res.data;
+  }
+
+  @action async deleteShift(shift: IShift) {
+    const res = await client.delete(`/shifts/${shift.id}`);
+
+    _.remove(this.shifts, (s) => shift.id == s.id);
+
+    return res.data;
+  }
+
+  getShift(id: number): IShift {
+    return _.find(this.shifts, (s) => s.id == id);
   }
 }
 

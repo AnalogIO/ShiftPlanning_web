@@ -7,6 +7,7 @@ import { action } from 'mobx';
 const { Link, Match, Redirect } = require('react-router');
 
 import AddShift from 'components/AddShift';
+import UpdateShift from 'components/UpdateShift';
 import { IEmployee, IShift } from 'stores';
 
 @inject('stores') @observer
@@ -42,27 +43,36 @@ export default class Shifts extends Component<any, {}> {
       weekNumbersWithinDays: true,
       fixedWeekCount: false,
       events: shifts,
+      timeFormat: 'HH:mm',
       slotLabelFormat: 'HH:mm',
       contentHeight: calendarHeight,
       header: {
         right: 'today month,agendaWeek prev,next',
       },
-      eventClick(e: any) {
-        console.log(JSON.stringify(e.employees, null, 4));
+      eventClick: (e: any) => {
+        this.context.router.transitionTo({
+          pathname: '/shifts/update',
+          query: {
+            id: e.id,
+          },
+        });
       },
       dayClick: (date: any) => { // moment object
         const year = date.year();
         const month = date.month() + 1;
         const day = date.date();
-        const hours = date.hours() === 0 ? null : date.hours();
-        const minutes = date.minutes();
-        let path = `/shifts/add?year=${year}&month=${month}&day=${day}`;
 
-        if (hours) {
-          path += `&hours=${hours}&minutes=${minutes}`;
+        const query: any = { year, month, day };
+
+        if (date.hours() !== 0) {
+          query.hours = date.hours();
+          query.minutes = date.minutes();
         }
 
-        this.context.router.transitionTo(path);
+        this.context.router.transitionTo({
+          query,
+          pathname: '/shifts/add',
+        });
       },
     });
   }
@@ -81,6 +91,20 @@ export default class Shifts extends Component<any, {}> {
             onSubmit={(s: any) => ShiftStore.addShift(s)}
           />
         )} />
+
+        <Match pattern="/shifts/update" render={(props: any) => {
+          const shift = ShiftStore.getShift(props.location.query.id);
+          return <UpdateShift
+            route={props}
+            employees={this.state.employees}
+            shift={shift}
+            handleUpdateShift={(s: any) => ShiftStore.updateShift(s)}
+            handleDeleteShift={async (s: any) => {
+              await ShiftStore.deleteShift(s)
+              $('#calendar').fullCalendar('removeEvents', [s.id]);
+            }}
+          />
+        }} />
       </div>
     );
   }
