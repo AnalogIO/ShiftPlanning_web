@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`app sign in failed 1`] = `
+Object {
+  "currentUser": undefined,
+  "loggingIn": false,
+}
+`;
+
+exports[`app sign in is done 1`] = `
+Object {
+  "currentUser": Object {
+    "active": true,
+    "checkInCount": 0,
+    "email": "test@example.com",
+    "employeeTitle": "Barista",
+    "employeeTitleId": 1,
+    "firstName": "John",
+    "friendshipIds": Array [],
+    "id": 1,
+    "lastName": "Doe",
+    "photoRef": "",
+    "roles": 0,
+    "wantShifts": 1,
+  },
+  "loggingIn": false,
+}
+`;
+
+exports[`app sign in starts 1`] = `
+Object {
+  "loggingIn": true,
+}
+`;
+
+exports[`app sign out is done 1`] = `
+Object {
+  "currentUser": undefined,
+  "loggingIn": false,
+}
+`;
