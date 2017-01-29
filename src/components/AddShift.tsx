@@ -1,19 +1,5 @@
 declare var moment: any;
 
-function getParameterByName(name: string, url?: string): string {
-  if (!url) {
-    url = window.location.href;
-  }
-
-  name = name.replace(/[\[\]]/g, "\\$&");
-  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
-  var results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return '';
-
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
-
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 
@@ -33,11 +19,12 @@ export default class AddShift extends Component<any, any> {
   handleNewShift = async (e: any) => {
     e.preventDefault();
 
-    const { date, newShift } = this.props;
+    const { route, newShift } = this.props;
+    const { year, month, day } = route.location.query;
+    const date = moment([year, month - 1, day]);
     const { start, end } = newShift;
-    const offset = date.utcOffset() / 60;
-    const sd = moment(date.format('YYYY-DD-MM ') + start + moment().format(' ZZ'), 'YYYY-DD-MM HH:mm ZZ');
-    const ed = moment(date.format('YYYY-DD-MM ') + end + moment().format(' ZZ'), 'YYYY-DD-MM HH:mm ZZ');
+    const sd = moment(date.format('YYYY-DD-MM ') + start + date.format(' ZZ'), 'YYYY-DD-MM HH:mm ZZ');
+    const ed = moment(date.format('YYYY-DD-MM ') + end + date.format(' ZZ'), 'YYYY-DD-MM HH:mm ZZ');
     const employeeIds = this.state.employees.map(e => e.id);
 
     await this.props.onSubmit({
@@ -84,16 +71,13 @@ export default class AddShift extends Component<any, any> {
   }
 
   render() {
-    const year = getParameterByName('year');
-    const month = getParameterByName('month');
-    const day = getParameterByName('day');
-    const hours = getParameterByName('hours');
-    const minutes = getParameterByName('minutes');
+    const { route, newShift } = this.props;
+    const { year, month, day, hours, minutes } = route.location.query;
     const m = moment();
-    let date = moment(`${year}-${month}-${day}`, 'YYYY-MM-DD');
+    let date = moment([year, month - 1, day]);
 
     if (hours) {
-      date = moment(`${year}-${month}-${day} ${hours}:${minutes} ${m.format('ZZ')}`, 'YYYY-MM-DD HH:mm ZZ');
+      date = moment([year, month - 1, day, hours, minutes]);
     }
 
     const { employees, suggestions } = this.state;
@@ -118,8 +102,8 @@ export default class AddShift extends Component<any, any> {
             <div className="control is-horizontal">
               <div className="control-label"><label className="label">To:</label></div>
               <div className="control">{hours
-                ? <input className="input" type="text" name="start" value={date.add(2, 'hours').format('HH:mm')} onChange={this.onChange} />
-                : <input className="input" type="text" placeholder="10:00" name="start" onChange={this.onChange} />
+                ? <input className="input" type="text" name="end" value={date.add(2, 'hours').format('HH:mm')} onChange={this.onChange} />
+                : <input className="input" type="text" placeholder="10:00" name="end" onChange={this.onChange} />
               }</div>
             </div>
 
