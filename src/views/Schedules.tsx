@@ -62,7 +62,7 @@ export default class Schedules extends Component<any, {}> {
       </tr>
     ));
 
-    if (!schedules.length) {
+    if (!ScheduleStore.hasFetchedSchedules) {
       return <h1 className="title">Getting schedules...</h1>
     }
 

@@ -106,6 +106,7 @@ export type IScheduleId = number;
 export type IScheduledShiftId = number;
 
 class ScheduleStore {
+  @observable hasFetchedSchedules = false;
   @observable schedules = [] as ISchedule[];
 
   getById(id: number): ISchedule | null {
@@ -114,8 +115,10 @@ class ScheduleStore {
 
   @action async getSchedules() {
     const res = await client.get('/schedules');
-
     this.schedules = res.data as ISchedule[];
+
+    this.hasFetchedSchedules = true;
+
     return this.schedules;
   }
 
