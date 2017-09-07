@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'redux-first-router-link';
 
 import { VerticalMenuItem } from 'shared/types';
 
@@ -8,13 +8,13 @@ interface Props {
   isLoading?: boolean;
   items: VerticalMenuItem<any>[];
   newItemString?: string;
-  onSearchChange?: Function;
+  onSearchChange?: (value: string) => void;
   title?: string;
   newLink?: string;
 }
 
-const VerticalMenu = (props: Props) => {
-  let searchInput: any;
+export default (props: Props) => {
+  let searchInput: HTMLInputElement;
 
   const {
     creatingNewItem,
@@ -32,9 +32,7 @@ const VerticalMenu = (props: Props) => {
       <div className="ui input">
         <input
           placeholder="Search..."
-          ref={input => {
-            searchInput = input;
-          }}
+          ref={input => (searchInput = input!)}
           onChange={() => onSearchChange(searchInput.value)}
         />
       </div>
@@ -65,13 +63,8 @@ const VerticalMenu = (props: Props) => {
         </div>}
       {searchBox}
       {creatingNewItem &&
-        <Link
-          className={`item ${creatingNewItem ? 'active' : ''}`}
-          to={newLink ? newLink : ''}
-        >
-          <strong>
-            {newItemString}
-          </strong>
+        <Link className="item" to={newLink ? newLink : ''}>
+          {newItemString}
         </Link>}
       {items.map((item, index) =>
         <Link
@@ -91,4 +84,3 @@ const VerticalMenu = (props: Props) => {
     </div>
   );
 };
-export default VerticalMenu;

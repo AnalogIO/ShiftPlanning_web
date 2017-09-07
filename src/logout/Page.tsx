@@ -1,28 +1,26 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 import { Dispatch } from 'redux';
 
-import { actions } from 'app';
+import { thunks } from 'app';
 
 interface Props {
   logout: () => void;
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  logout() {
-    dispatch(actions.logout());
-  },
-});
-
 class Logout extends Component<Props, {}> {
-  componentWillMount() {
+  componentDidMount() {
     this.props.logout();
   }
 
   render() {
-    return <Redirect to="/" />;
+    return <div />;
   }
 }
 
-export default connect(state => ({}), mapDispatchToProps)(Logout);
+// Short hand notation will not type check
+const mapDispatchToProps = (dispatch: Dispatch<any>): Props => ({
+  logout: () => dispatch(thunks.logout()),
+});
+
+export default connect(undefined, mapDispatchToProps)(Logout);

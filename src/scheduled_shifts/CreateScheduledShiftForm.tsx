@@ -14,6 +14,8 @@ const mapStateToProps = (state: RootState) => ({
     start: '',
     end: '',
     employees: [],
+    minOnShift: 2,
+    maxOnShift: 3,
   },
 });
 

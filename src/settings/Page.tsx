@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 
 import * as app from 'app';
 import { CurrentUser } from 'app/types';
@@ -16,19 +17,16 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  fetchAll: any;
+  fetch: () => void;
 }
 
 class SettingScreen extends Component<StateProps & DispatchProps, {}> {
-  componentWillMount() {
-    this.props.fetchAll();
+  componentDidMount() {
+    this.props.fetch();
   }
 
   render() {
     const { user, employees: employeeList } = this.props;
-
-    // TODO: let the form type check instead of casting to `any`
-    const AnyUserSettingsForm = UserSettingsForm as any;
 
     return (
       <Header
@@ -36,20 +34,20 @@ class SettingScreen extends Component<StateProps & DispatchProps, {}> {
         headerText="Settings"
         isLoading={employeeList.length === 0}
         contentComponent={
-          <AnyUserSettingsForm user={user} employees={employeeList} />
+          <UserSettingsForm user={user} employees={employeeList} />
         }
       />
     );
   }
 }
 
-const mapStateToProps = (state: RootState): StateProps => {
-  return {
-    user: app.selectors.getCurrentUser(state)!,
-    employees: employees.selectors.getEmployees(state),
-  };
-};
+const mapStateToProps = (state: RootState): StateProps => ({
+  user: app.selectors.getCurrentUser(state)!,
+  employees: employees.selectors.getEmployees(state),
+});
 
-export default connect(mapStateToProps, {
-  fetchAll: employees.thunks.fetchAll,
-})(SettingScreen);
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
+  fetch: () => dispatch(employees.thunks.fetchAll),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SettingScreen);

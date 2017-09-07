@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { getEmployees, hasFetchedEmployees } from 'employees/selectors';
 import { Employee } from 'employees/types';
 import { ScheduledShiftDto } from 'scheduled_shifts/types';
+import EditSchedule from 'schedules/EditSchedule';
 import { ScheduleDto } from 'schedules/types';
 import { scheduledShiftSchema } from 'schemas';
 import { RootState } from 'shared/types';
@@ -26,25 +27,26 @@ export class EditScheduleShift extends Component<Props, {}> {
     }
 
     return (
-      <EditScheduledShiftForm
-        employees={employees}
-        schedule={schedule}
-        scheduledShift={scheduledShift}
-      />
+      <div>
+        <EditScheduledShiftForm
+          employees={employees}
+          schedule={schedule}
+          scheduledShift={scheduledShift}
+        />
+        <EditSchedule />
+      </div>
     );
   }
 }
 
-const mapStateToProps = (state: RootState, { match }: any) => {
+const mapStateToProps = (state: RootState) => {
   const { employees, schedules, scheduledShifts } = state;
+  const { scheduleId, scheduledShiftId } = state.location.payload;
 
   if (!hasFetchedEmployees(state)) {
     return {};
   }
 
-  const id = parseInt(match.params.id, 10);
-  // const day = parseInt(match.params.day, 10);
-  const scheduleId = parseInt(match.params.scheduleId, 10);
   const schedule = schedules[scheduleId];
 
   if (!schedule) {
@@ -53,7 +55,7 @@ const mapStateToProps = (state: RootState, { match }: any) => {
 
   const entities = { employees };
   const scheduledShift = denormalize(
-    scheduledShifts[id],
+    scheduledShifts[scheduledShiftId],
     scheduledShiftSchema,
     entities,
   );

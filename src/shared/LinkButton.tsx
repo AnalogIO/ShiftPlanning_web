@@ -1,6 +1,6 @@
 import cn from 'classnames';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'redux-first-router-link';
 
 type Props = {
   children: any;

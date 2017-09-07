@@ -1,5 +1,5 @@
-import { routerReducer as router } from 'react-router-redux';
-import { combineReducers } from 'redux';
+import { combineReducers, Reducer } from 'redux';
+import { LocationState } from 'redux-first-router';
 
 import app from 'app/ducks';
 import employees from 'employees/ducks';
@@ -8,12 +8,13 @@ import schedules from 'schedules/ducks';
 import shifts from 'shifts/ducks';
 import titles from 'titles/ducks';
 
-export const reducers = combineReducers({
-  app,
-  employees,
-  router,
-  schedules,
-  scheduledShifts,
-  shifts,
-  titles,
-});
+export const createReducers = (location: Reducer<LocationState>) =>
+  combineReducers({
+    app,
+    employees,
+    location,
+    scheduledShifts,
+    schedules,
+    shifts,
+    titles,
+  });

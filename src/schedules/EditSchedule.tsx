@@ -1,4 +1,4 @@
-import React, { Component, EventHandler, MouseEvent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
@@ -16,7 +16,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  handleDelete: EventHandler<MouseEvent<HTMLButtonElement>>;
+  handleDelete: (id: number) => void;
   generateOptimalSchedule: (id: number) => void;
 }
 
@@ -40,7 +40,7 @@ export class EditSchedule extends Component<StateProps & DispatchProps, {}> {
         <LinkButton primary to={`/schedules/${schedule.id}/rollout`}>
           Roll out
         </LinkButton>
-        <Button negative basic onClick={handleDelete}>
+        <Button negative basic onClick={() => handleDelete(schedule.id)}>
           Delete schedule
         </Button>
       </div>
@@ -48,27 +48,18 @@ export class EditSchedule extends Component<StateProps & DispatchProps, {}> {
   }
 }
 
-const mapStateToProps = (state: RootState, { match }: any): StateProps => {
-  const id = parseInt(match.params.id, 10);
+const mapStateToProps = (state: RootState): StateProps => ({
+  schedule: selectors.getScheduleById(state, state.location.payload.scheduleId),
+});
 
-  return {
-    schedule: selectors.getScheduleById(state, id),
-  };
-};
-
-const mapDispatchToProps = (
-  dispatch: Dispatch<any>,
-  { match }: any,
-): DispatchProps => ({
+const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
   async generateOptimalSchedule(id: number) {
     return dispatch(thunks.generateOptimalSchedule(id));
   },
-  handleDelete() {
+  async handleDelete(id: number) {
     if (!confirm('Are you sure you want to delete the schedule?')) {
       return;
     }
-
-    const id = parseInt(match.params.id, 10);
 
     return dispatch(thunks.remove(id));
   },

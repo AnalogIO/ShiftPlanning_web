@@ -5,8 +5,16 @@ import { RootState } from 'shared/types';
 import { getSchedules } from 'schedules/selectors';
 import VerticalMenu from 'shared/VerticalMenu';
 
-const mapStateToProps = (state: RootState, { match, link, createNew }: any) => {
-  const id = parseInt(match.params.id, 10);
+interface OwnProps {
+  link: string;
+  createNew?: boolean;
+}
+
+const mapStateToProps = (
+  state: RootState,
+  { link, createNew = true }: OwnProps,
+) => {
+  const id = state.location.payload.scheduleId;
 
   const items = getSchedules(state).map(s => ({
     title: `${s.name}`,

@@ -1,32 +1,23 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
-import { RootState } from 'shared/types';
+import { selectors } from 'employees';
+import { Maybe } from 'shared/types';
 import EditEmployeeForm from './EditEmployeeForm';
 import { Employee } from './types';
 
 interface Props {
-  employee: Employee;
+  employee: Maybe<Employee>;
 }
 
-export class EditEmployee extends Component<Props, {}> {
-  render() {
-    const { employee } = this.props;
-
-    if (!employee) {
-      return <div />;
-    }
-
-    return <EditEmployeeForm employee={employee} />;
+export const EditEmployee = ({ employee }: Props) => {
+  if (!employee) {
+    return <div />;
   }
-}
 
-const mapStateToProps = ({ employees }: RootState, { match }: any) => {
-  const id = parseInt(match.params.id, 10);
-
-  return {
-    employee: employees[id],
-  };
+  return <EditEmployeeForm employee={employee} />;
 };
 
-export default connect(mapStateToProps)(EditEmployee as any);
+export default connect(state => ({
+  employee: selectors.getById(state, state.location.payload.employeeId),
+}))(EditEmployee);

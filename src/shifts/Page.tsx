@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
 
 import * as employees from 'employees';
 import { Employee } from 'employees/types';
 import { RootState } from 'shared/types';
-import { selectors, thunks } from 'shifts';
+import { selectors } from 'shifts';
 import { ShiftDto } from './types';
 
 import Header from 'shared/layouts/Header';
@@ -17,17 +16,11 @@ interface StateProps {
   shifts: ShiftDto[];
 }
 
-interface DispatchProps {
-  fetch: () => void;
-}
+interface DispatchProps {}
 
 type Props = StateProps & DispatchProps;
 
 class ShiftScreen extends Component<Props, {}> {
-  componentDidMount() {
-    this.props.fetch();
-  }
-
   render() {
     return (
       <Header
@@ -45,9 +38,4 @@ const mapStateToProps = (state: RootState) => ({
     selectors.hasFetchedShifts(state),
 });
 
-const fetch = () => (dispatch: Dispatch<any>) => {
-  dispatch(thunks.fetchAll());
-  dispatch(employees.thunks.fetchAll());
-};
-
-export default connect(mapStateToProps, { fetch })(ShiftScreen as any);
+export default connect(mapStateToProps)(ShiftScreen as any);

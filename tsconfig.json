@@ -14,7 +14,6 @@
     "rootDir": ".",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
-    // "noUnusedLocals": true,
     "strict": true,
     "suppressImplicitAnyIndexErrors": true
   },

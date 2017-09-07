@@ -4,21 +4,16 @@ declare var module: any;
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'react-router-redux';
 
 import registerServiceWorker from 'registerServiceWorker';
-import { history, store } from 'store';
+import { store } from 'store';
 
 import AppPage from 'app/Page';
-
-store.dispatch({ type: '@@APP_INIT' });
 
 const render = () => {
   ReactDOM.render(
     <Provider store={store}>
-      <ConnectedRouter history={history}>
-        <AppPage />
-      </ConnectedRouter>
+      <AppPage />
     </Provider>,
     document.getElementById('root') as HTMLElement,
   );

@@ -1,9 +1,13 @@
+import { Location } from 'redux-first-router';
+
 import { AppState } from 'app/types';
 import { EmployeeState } from 'employees/types';
 import { ScheduledShiftState } from 'scheduled_shifts/types';
 import { ScheduleState } from 'schedules/types';
 import { ShiftState } from 'shifts/types';
 import { TitleState } from 'titles/types';
+
+export type GetState = () => RootState;
 
 export type Maybe<T> = undefined | T;
 
@@ -35,5 +39,6 @@ export interface RootState {
   scheduledShifts: ScheduledShiftState;
   shifts: ShiftState;
   titles: TitleState;
-  form: any; // redux-form
+  // because `object` is not worth much on such a dynamic property
+  location: Location & { payload: any };
 }

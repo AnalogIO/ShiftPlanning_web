@@ -1,7 +1,7 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'redux-first-router-link';
 
-import { routes } from 'routes';
+import routes from 'routes';
 import { Roles } from './types';
 
 interface Props {

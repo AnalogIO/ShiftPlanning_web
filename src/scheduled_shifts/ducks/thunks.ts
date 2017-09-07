@@ -1,5 +1,4 @@
 import { normalize } from 'normalizr';
-import { push } from 'react-router-redux';
 import { Dispatch } from 'redux';
 
 import { actions, api } from 'scheduled_shifts';
@@ -96,7 +95,6 @@ export const remove = (schedule: Schedule, scheduledShiftId: number) => async (
         result: undefined,
       }),
     );
-    dispatch(push(`/schedules/${schedule.id}`));
   } catch (e) {
     dispatch(
       actions.remove.failed({

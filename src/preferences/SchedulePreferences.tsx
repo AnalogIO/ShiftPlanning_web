@@ -3,28 +3,19 @@ import { connect } from 'react-redux';
 
 import { getScheduleById } from 'schedules/selectors';
 import { ScheduleDto } from 'schedules/types';
+import { RootState } from 'shared/types';
 
 import WeekPreferenceSchedule from './WeekPreferenceSchedule';
 
-interface StateProps {
+interface Props {
   schedule: ScheduleDto;
 }
 
-interface DispatchProps {}
+const SchedulePreferences = (props: Props) =>
+  <WeekPreferenceSchedule schedule={props.schedule} />;
 
-class SchedulePreferences extends React.Component<
-  StateProps & DispatchProps,
-  {}
-> {
-  render() {
-    return <WeekPreferenceSchedule schedule={this.props.schedule} />;
-  }
-}
+const mapStateToProps = (state: RootState) => ({
+  schedule: getScheduleById(state, state.location.payload.scheduleId),
+});
 
-export default connect((state, { match }: any) => {
-  const id = parseInt(match.params.id, 10);
-
-  return {
-    schedule: getScheduleById(state, id),
-  };
-})(SchedulePreferences as any);
+export default connect(mapStateToProps)(SchedulePreferences);

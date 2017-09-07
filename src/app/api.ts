@@ -1,7 +1,7 @@
 import { createHash } from 'crypto';
 
 import { client } from 'api';
-import { Role } from 'routes';
+import { RoleFlag } from 'routes';
 import { LoginData, ManagerLogin } from './types';
 
 export const login = async (manager: ManagerLogin) => {
@@ -16,9 +16,11 @@ export const login = async (manager: ManagerLogin) => {
 
   organization.expiresWhen = new Date(organization.expires * 1000 + Date.now());
 
-  const roles = (organization as any).employee.roles as (keyof typeof Role)[];
+  const roles = (organization as any).employee
+    .roles as (keyof typeof RoleFlag)[];
+
   organization.employee.roles = roles
-    .map(r => Role[r])
+    .map(r => RoleFlag[r])
     .reduce((acc, r) => acc | r, 0);
 
   return organization;

@@ -1,5 +1,5 @@
-import { Handlers } from 'react-formie';
 import React from 'react';
+import { Handlers } from 'react-formie';
 
 type Props = {
   label?: string;

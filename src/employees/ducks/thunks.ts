@@ -1,5 +1,4 @@
 import { normalize } from 'normalizr';
-import { push } from 'react-router-redux';
 import { Dispatch } from 'redux';
 
 import { actions, api } from 'employees';
@@ -102,7 +101,6 @@ export const remove = (id: number) => async (dispatch: Dispatch<any>) => {
         result: undefined,
       }),
     );
-    dispatch(push('/employees'));
   } catch (e) {
     dispatch(
       actions.remove.failed({

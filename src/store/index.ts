@@ -2,24 +2,45 @@
 declare var window: any;
 
 import createHistory from 'history/createBrowserHistory';
-import { routerMiddleware } from 'react-router-redux';
-import { applyMiddleware, createStore } from 'redux';
+import { applyMiddleware, compose, createStore, Dispatch } from 'redux';
+import { connectRoutes } from 'redux-first-router';
 import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 
+// TODO: be more selective about picking routes/paths
 import { client } from 'api';
-import { reducers } from 'duck';
+import * as app from 'app';
+import { createReducers } from 'duck';
+import * as employees from 'employees';
 import { auth, sure, toast } from 'middlewares';
+import * as preferences from 'preferences';
+import * as schedules from 'schedules';
+import { GetState } from 'shared/types';
+import * as shifts from 'shifts';
 
 export const history = createHistory();
 
-const middlewares = [
-  sure,
-  auth(client),
-  routerMiddleware(history),
-  thunk,
-  toast,
-];
+const routes = {
+  ...app.routes.paths,
+  ...employees.routes.paths,
+  ...schedules.routes.paths,
+  ...preferences.routes.paths,
+  ...shifts.routes.paths,
+};
+
+const {
+  reducer: rudyReducer,
+  middleware: rudyMiddleware,
+  enhancer: rudyEnhancer,
+} = connectRoutes(history, routes, {
+  onBeforeChange: (dispatch: Dispatch<any>, getState: GetState) => {
+    if (!getState().app.currentUser) {
+      dispatch({ type: '@@APP_INIT' });
+    }
+  },
+});
+
+const middlewares = [sure, auth(client), rudyMiddleware, thunk, toast];
 
 if (process.env.NODE_ENV !== 'production') {
   const logger = createLogger({
@@ -30,7 +51,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 export const store = createStore(
-  reducers,
+  createReducers(rudyReducer),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-  applyMiddleware(...middlewares),
+  compose(rudyEnhancer, applyMiddleware(...middlewares)),
 );

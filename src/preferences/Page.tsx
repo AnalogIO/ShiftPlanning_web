@@ -1,47 +1,37 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Route } from 'react-router-dom';
+import { Location } from 'redux-first-router';
 
 import { hasFetchedSchedules } from 'schedules/selectors';
+import { RootState } from 'shared/types';
 
+import { routes } from 'preferences';
 import ScheduleVerticalMenu from 'schedules/ScheduleVerticalMenu';
 import HeaderHorizontalSplit from 'shared/layouts/HeaderHorizontalSplit';
 import SchedulePreferences from './SchedulePreferences';
 
 interface StateProps {
   hasFetched: boolean;
+  location: Location;
 }
 
-class PreferenceScreen extends React.Component<StateProps, {}> {
-  render() {
-    return (
-      <HeaderHorizontalSplit
-        headerText="Preferences"
-        isLoading={!this.props.hasFetched}
-        sidebarComponent={
-          <Route
-            children={props =>
-              <ScheduleVerticalMenu
-                link="preferences"
-                createNew={false}
-                {...props}
-              />}
-          />
-        }
-        contentComponent={
-          <div className="ui basic segment">
-            <Route
-              exact
-              path="/preferences/:id"
-              component={SchedulePreferences}
-            />
-          </div>
-        }
-      />
-    );
-  }
-}
+const PreferenceScreen = (props: StateProps) =>
+  <HeaderHorizontalSplit
+    headerText="Preferences"
+    isLoading={!props.hasFetched}
+    sidebarComponent={
+      <ScheduleVerticalMenu link="preferences" createNew={false} />
+    }
+    contentComponent={
+      <div className="ui basic segment">
+        {props.location.type === routes.update.type && <SchedulePreferences />}
+      </div>
+    }
+  />;
 
-export default connect(state => ({ hasFetched: hasFetchedSchedules(state) }))(
-  PreferenceScreen as any,
-);
+const mapStateToProps = (state: RootState): StateProps => ({
+  hasFetched: hasFetchedSchedules(state),
+  location: state.location,
+});
+
+export default connect(mapStateToProps)(PreferenceScreen);

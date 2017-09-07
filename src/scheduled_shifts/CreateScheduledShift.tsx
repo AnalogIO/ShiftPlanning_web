@@ -1,43 +1,44 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
-import { getEmployees } from 'employees/selectors';
+import * as employees from 'employees';
 import { Employee } from 'employees/types';
+import { selectors } from 'schedules';
 import { ScheduleDto } from 'schedules/types';
 import { RootState } from 'shared/types';
 
+import EditSchedule from 'schedules/EditSchedule';
 import CreateScheduledShiftForm from './CreateScheduledShiftForm';
 
 interface Props {
   day: number;
-  employees: Employee[];
+  employeeList: Employee[];
   schedule: ScheduleDto;
 }
 
-export class CreateScheduleShift extends Component<Props, {}> {
-  render() {
-    const { day, employees, schedule } = this.props;
+export const CreateScheduleShift = (props: Props) => {
+  const { day, employeeList, schedule } = props;
 
-    return (
+  return (
+    <div>
       <CreateScheduledShiftForm
         day={day}
-        employees={employees}
+        employees={employeeList}
         schedule={schedule}
       />
-    );
-  }
-}
+      <EditSchedule />
+    </div>
+  );
+};
 
 const mapStateToProps = (state: RootState, { match }: any) => {
-  const id = parseInt(match.params.id, 10);
-  const day = parseInt(match.params.day, 10);
-  const schedule = state.schedules[id];
+  const { scheduleId, day } = state.location.payload;
 
   return {
     day,
-    employees: getEmployees(state),
-    schedule,
+    employeeList: employees.selectors.getEmployees(state),
+    schedule: selectors.getScheduleById(state, scheduleId),
   };
 };
 
-export default connect(mapStateToProps)(CreateScheduleShift as any);
+export default connect(mapStateToProps)(CreateScheduleShift);
