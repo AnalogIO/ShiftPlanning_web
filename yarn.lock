@@ -5302,9 +5302,9 @@ react-error-overlay@^1.0.8:
     settle-promise "1.0.0"
     source-map "0.5.6"
 
-react-formie@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/react-formie/-/react-formie-0.1.6.tgz#61c5804b32e413779a9e481da4d008a0832f6beb"
+react-formie@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/react-formie/-/react-formie-0.1.7.tgz#8e24ad27c2f78fa16eeafbe3b84ec4b16566bf8c"
   dependencies:
     tslib "^1.7.1"
   optionalDependencies:

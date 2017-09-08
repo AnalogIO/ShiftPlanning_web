@@ -6,7 +6,7 @@
     "moment": "^2.18.1",
     "normalizr": "^3.2.3",
     "react": "^15.6.1",
-    "react-formie": "^0.1.6",
+    "react-formie": "^0.1.7",
     "react-loadable": "^4.0.4",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",

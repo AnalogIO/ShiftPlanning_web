@@ -25,16 +25,21 @@ export default class ScheduleShiftForm extends Component<Props, {}> {
   };
 
   render() {
-    const { initial, employees: employeeList, onDelete } = this.props;
+    const { employees: employeeList, onDelete } = this.props;
 
     if (!employeeList) {
       return <div />;
     }
 
+    const initial = {
+      ...this.props.initial,
+      employeeIds: this.props.initial.employees.map(e => e.id),
+    };
+
     const timeValidator = (v: string) =>
       !/\d\d:\d\d/.test(v) && 'Time format seems to be wrong';
 
-    const endValidator = (values: any) => {
+    const endValidator = (values: typeof initial) => {
       if (timeValidator(values.end)) {
         return timeValidator(values.end);
       }
@@ -57,11 +62,10 @@ export default class ScheduleShiftForm extends Component<Props, {}> {
     return (
       <Formie
         onSubmit={this.props.handleSubmit}
-        initial={{ ...initial, employeeIds: initial.employees.map(e => e.id) }}
+        initial={initial}
         validate={{
           start: timeValidator,
-          end: (v: any, values: any) => endValidator(values),
-          employees: (v: any[]) => v.length === 0 && 'Need employees',
+          end: (v: any, values: typeof initial) => endValidator(values),
         }}
         form={({ pristine, field, submitting, invalid, handleSubmit }) =>
           <form className="ui form" onSubmit={handleSubmit}>
@@ -82,7 +86,7 @@ export default class ScheduleShiftForm extends Component<Props, {}> {
                 <label>
                   Employees
                   <SuggestionInput
-                    initial={initial.employees.map(e => e.id)}
+                    initial={initial.employeeIds}
                     items={employeeList.map(e => ({
                       ...e,
                       name: `${e.firstName} ${e.lastName}`,
