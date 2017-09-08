@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import * as employees from 'employees';
 import { Employee } from 'employees/types';
-import { selectors } from 'schedules';
+import * as schedules from 'schedules';
 import { ScheduleDto } from 'schedules/types';
 import { RootState } from 'shared/types';
 
@@ -37,7 +37,7 @@ const mapStateToProps = (state: RootState, { match }: any) => {
   return {
     day,
     employeeList: employees.selectors.getEmployees(state),
-    schedule: selectors.getScheduleById(state, scheduleId),
+    schedule: schedules.selectors.getById(state, scheduleId),
   };
 };
 

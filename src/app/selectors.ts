@@ -1,9 +1,18 @@
+import { createSelector } from 'reselect';
+
 import { RootState } from 'shared/types';
 
-export const getCurrentUser = (state: RootState) => {
-  return state.app.currentUser;
-};
+const currentUserSelector = (state: RootState) => state.app.currentUser;
+const employeesSelector = (state: RootState) => state.employees;
 
-export const getFriends = ({ app, employees }: RootState) => {
-  return app.currentUser!.friendshipIds.map(id => employees[id]);
-};
+export const getCurrentUser = createSelector(
+  currentUserSelector,
+  currentUser => currentUser,
+);
+
+export const getFriends = createSelector(
+  getCurrentUser,
+  employeesSelector,
+  (currentUser, employees) =>
+    currentUser ? currentUser.friendshipIds.map(id => employees[id]) : [],
+);

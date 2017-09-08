@@ -1,33 +1,41 @@
 import { denormalize } from 'normalizr';
+import { createSelector } from 'reselect';
 
-import * as employees from 'employees';
+import { selectors as employeesSelectors } from 'employees';
 import { shiftSchema } from 'schemas';
 import { RootState } from 'shared/types';
 import { ShiftDto } from './types';
 
-export const getShifts = ({ shifts }: RootState) => {
-  return shifts.result ? shifts.result.map(r => shifts[r]) : [];
-};
+const shiftsSelector = (state: RootState) => state.shifts;
 
-export const hasFetchedShifts = ({ shifts }: RootState) => {
-  return !!shifts.result;
-};
+export const getShifts = createSelector(
+  shiftsSelector,
+  shifts => (shifts.result ? shifts.result.map(r => shifts[r]) : []),
+);
 
-export const getShiftsAsCalendarEvents = (state: RootState) => {
-  if (
-    !hasFetchedShifts(state) ||
-    !employees.selectors.hasFetchedEmployees(state)
-  ) {
-    return [];
-  }
+export const hasFetchedShifts = createSelector(
+  shiftsSelector,
+  shifts => !!shifts.result,
+);
 
-  const shifts = denormalize(state.shifts.result, [shiftSchema], {
-    employees: state.employees,
-    shifts: state.shifts,
-  }) as ShiftDto[];
+export const getShiftsAsCalendarEvents = createSelector(
+  shiftsSelector,
+  employeesSelectors.employeesSelector,
+  employeesSelectors.hasFetchedEmployees,
+  hasFetchedShifts,
+  (shiftsState, employeesState, employeesFetched, shiftsFetched) => {
+    if (!employeesFetched || !shiftsFetched) {
+      return [];
+    }
 
-  return shifts.map(s => ({
-    ...s,
-    title: s.employees.map(e => e.firstName).join(', '),
-  }));
-};
+    const shifts = denormalize(shiftsState.result, [shiftSchema], {
+      employees: employeesState,
+      shifts: shiftsState,
+    }) as ShiftDto[];
+
+    return shifts.map(s => ({
+      ...s,
+      title: s.employees.map(e => e.firstName).join(', '),
+    }));
+  },
+);

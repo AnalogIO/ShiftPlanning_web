@@ -22,7 +22,7 @@ interface DispatchProps {
   handleSubmit: (values: FormValues, scheduleId: number) => void;
 }
 
-const RolloutForm = (props: StateProps & DispatchProps) =>
+const RolloutForm = (props: StateProps & DispatchProps) => (
   <Formie
     initial={{ from: '', to: '', startFrom: 1 } as FormValues}
     onSubmit={(values: FormValues) =>
@@ -34,27 +34,26 @@ const RolloutForm = (props: StateProps & DispatchProps) =>
         !/\d\d-\d\d-\d\d/.test(v) && 'Date looks wrongly formatted',
       startFrom: (v: number) => v === 0 && 'Has to start from a positive week',
     }}
-    form={({ handleSubmit, submitting, pristine, invalid, field, ...rest }) =>
+    form={({ handleSubmit, submitting, pristine, invalid, field, ...rest }) => (
       <form className="ui form" onSubmit={handleSubmit}>
-        {field('from', fieldProps =>
-          <Input {...fieldProps} placeholder="dd-mm-yy" label="From" />,
-        )}
-        {field('to', fieldProps =>
-          <Input {...fieldProps} placeholder="dd-mm-yy" label="To" />,
-        )}
-        {field('startFrom', fieldProps =>
-          <NumberInput {...fieldProps} placeholder="Week to start from" />,
-        )}
+        {field('from', fieldProps => (
+          <Input {...fieldProps} placeholder="dd-mm-yy" label="From" />
+        ))}
+        {field('to', fieldProps => (
+          <Input {...fieldProps} placeholder="dd-mm-yy" label="To" />
+        ))}
+        {field('startFrom', fieldProps => (
+          <NumberInput {...fieldProps} placeholder="Week to start from" />
+        ))}
 
         <Button disabled={submitting || pristine || invalid}>Roll out!</Button>
-      </form>}
-  />;
+      </form>
+    )}
+  />
+);
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  scheduleId: selectors.getScheduleById(
-    state,
-    state.location.payload.scheduleId,
-  ),
+  scheduleId: selectors.getById(state, state.location.payload.scheduleId),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({

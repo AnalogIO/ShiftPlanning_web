@@ -1,6 +1,15 @@
+import { createSelector } from 'reselect';
+
 import { RootState } from 'shared/types';
 
-export const getTitles = ({ titles }: RootState) =>
-  titles.result ? titles.result.map(r => titles[r]) : [];
+const titlesSelector = (state: RootState) => state.titles;
 
-export const hasFetchedTitles = ({ titles }: RootState) => !!titles.result;
+export const getTitles = createSelector(
+  titlesSelector,
+  titles => (titles.result ? titles.result.map(r => titles[r]) : []),
+);
+
+export const hasFetchedTitles = createSelector(
+  titlesSelector,
+  titles => !!titles.result,
+);

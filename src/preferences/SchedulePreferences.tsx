@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getScheduleById } from 'schedules/selectors';
+import * as schedules from 'schedules';
 import { ScheduleDto } from 'schedules/types';
 import { RootState } from 'shared/types';
 
@@ -11,11 +11,14 @@ interface Props {
   schedule: ScheduleDto;
 }
 
-const SchedulePreferences = (props: Props) =>
-  <WeekPreferenceSchedule schedule={props.schedule} />;
+const SchedulePreferences = (props: Props) => (
+  <WeekPreferenceSchedule schedule={props.schedule} />
+);
+
+const { selectors: { getById } } = schedules;
 
 const mapStateToProps = (state: RootState) => ({
-  schedule: getScheduleById(state, state.location.payload.scheduleId),
+  schedule: getById(state, state.location.payload.scheduleId),
 });
 
 export default connect(mapStateToProps)(SchedulePreferences);

@@ -1,13 +1,21 @@
+import { createSelector } from 'reselect';
+
 import { Employee } from 'employees/types';
 import { Maybe, RootState } from 'shared/types';
 
-export const getEmployees = ({ employees }: RootState) => {
-  return employees.result ? employees.result.map(r => employees[r]) : [];
-};
+export const employeesSelector = (state: RootState) => state.employees;
+const byIdSelector = (state: RootState, id: number): Maybe<Employee> =>
+  employeesSelector(state)[id];
 
-export const getById = (state: RootState, id: number): Maybe<Employee> =>
-  state.employees[id];
+export const getEmployees = createSelector(
+  employeesSelector,
+  employees =>
+    employees.result ? employees.result.map(r => employees[r]) : [],
+);
 
-export const hasFetchedEmployees = ({ employees }: RootState) => {
-  return !!employees.result;
-};
+export const getById = createSelector(byIdSelector, employee => employee);
+
+export const hasFetchedEmployees = createSelector(
+  employeesSelector,
+  employees => !!employees.result,
+);

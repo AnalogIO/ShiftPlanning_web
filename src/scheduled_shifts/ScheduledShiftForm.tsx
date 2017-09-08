@@ -67,21 +67,21 @@ export default class ScheduleShiftForm extends Component<Props, {}> {
           start: timeValidator,
           end: (v: any, values: typeof initial) => endValidator(values),
         }}
-        form={({ pristine, field, submitting, invalid, handleSubmit }) =>
+        form={({ pristine, field, submitting, invalid, handleSubmit }) => (
           <form className="ui form" onSubmit={handleSubmit}>
-            {field('start', props =>
-              <Input {...props} placeholder="08:00" label="Start" />,
-            )}
-            {field('end', props =>
-              <Input {...props} placeholder="10:00" label="End" />,
-            )}
-            {field('minOnShift', props =>
-              <NumberInput {...props} placeholder="Min on shift" />,
-            )}
-            {field('maxOnShift', props =>
-              <NumberInput {...props} placeholder="Max on shift" />,
-            )}
-            {field('employeeIds', ({ update }) =>
+            {field('start', props => (
+              <Input {...props} placeholder="08:00" label="Start" />
+            ))}
+            {field('end', props => (
+              <Input {...props} placeholder="10:00" label="End" />
+            ))}
+            {field('minOnShift', props => (
+              <NumberInput {...props} placeholder="Min on shift" />
+            ))}
+            {field('maxOnShift', props => (
+              <NumberInput {...props} placeholder="Max on shift" />
+            ))}
+            {field('employeeIds', ({ update }) => (
               <div className="ui field">
                 <label>
                   Employees
@@ -94,14 +94,14 @@ export default class ScheduleShiftForm extends Component<Props, {}> {
                     onChange={vals => update(vals.map(e => e.id))}
                   />
                 </label>
-              </div>,
-            )}
+              </div>
+            ))}
 
             <Button secondary disabled={submitting || pristine || invalid}>
               {this.props.submitText}
             </Button>
 
-            {onDelete &&
+            {onDelete && (
               <Button
                 negative
                 basic
@@ -109,8 +109,10 @@ export default class ScheduleShiftForm extends Component<Props, {}> {
                 onClick={this.handleDelete}
               >
                 Delete
-              </Button>}
-          </form>}
+              </Button>
+            )}
+          </form>
+        )}
       />
     );
   }

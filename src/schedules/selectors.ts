@@ -1,32 +1,46 @@
 import { denormalize } from 'normalizr';
+import { createSelector } from 'reselect';
 
 import { scheduleSchema } from 'schemas';
-import { RootState } from 'shared/types';
+import { Schedule } from 'schedules/types';
+import { Maybe, RootState } from 'shared/types';
 
-export const getSchedules = ({
-  employees,
-  scheduledShifts,
-  schedules,
-}: RootState) => {
-  if (!schedules.result) {
-    return [];
-  }
+const employeesSelector = (state: RootState) => state.employees;
+const schedulesSelector = (state: RootState) => state.schedules;
+const scheduledShiftsSelector = (state: RootState) => state.scheduledShifts;
 
-  return schedules.result.map(id => {
+export const getSchedules = createSelector(
+  employeesSelector,
+  schedulesSelector,
+  scheduledShiftsSelector,
+  (employees, schedules, scheduledShifts) => {
+    if (!schedules.result) {
+      return [];
+    }
+
+    return schedules.result.map(id => {
+      const entities = { employees, scheduledShifts };
+
+      return denormalize(schedules[id], scheduleSchema, entities);
+    });
+  },
+);
+
+export const hasFetchedSchedules = createSelector(
+  schedulesSelector,
+  schedules => !!schedules.result,
+);
+
+const byIdSelector = (state: RootState, id: number): Maybe<Schedule> =>
+  schedulesSelector(state)[id];
+
+export const getById = createSelector(
+  employeesSelector,
+  scheduledShiftsSelector,
+  byIdSelector,
+  (employees, scheduledShifts, schedule) => {
     const entities = { employees, scheduledShifts };
 
-    return denormalize(schedules[id], scheduleSchema, entities);
-  });
-};
-
-export const hasFetchedSchedules = ({ schedules }: RootState) =>
-  !!schedules.result;
-
-export const getScheduleById = (
-  { employees, scheduledShifts, schedules }: RootState,
-  id: number,
-) => {
-  const entities = { employees, scheduledShifts };
-
-  return denormalize(schedules[id], scheduleSchema, entities);
-};
+    return denormalize(schedule, scheduleSchema, entities);
+  },
+);

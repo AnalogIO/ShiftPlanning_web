@@ -30,9 +30,9 @@ export class EditSchedule extends Component<StateProps & DispatchProps, {}> {
 
     return (
       <div>
-        {interval(schedule.numberOfWeeks).map(i =>
-          <WeekSchedule newShifts key={i} weekNumber={i} schedule={schedule} />,
-        )}
+        {interval(schedule.numberOfWeeks).map(i => (
+          <WeekSchedule newShifts key={i} weekNumber={i} schedule={schedule} />
+        ))}
 
         <Button primary onClick={() => generateOptimalSchedule(schedule.id)}>
           Generate optimal schedule
@@ -49,7 +49,7 @@ export class EditSchedule extends Component<StateProps & DispatchProps, {}> {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  schedule: selectors.getScheduleById(state, state.location.payload.scheduleId),
+  schedule: selectors.getById(state, state.location.payload.scheduleId),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
