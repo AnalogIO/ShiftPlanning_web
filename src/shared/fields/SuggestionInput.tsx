@@ -8,7 +8,7 @@ interface Item {
 
 interface Props {
   onChange: (items: Item[]) => void;
-  onToggleLock: (items: Item[]) => void;
+  onToggleLock?: (items: Item[]) => void;
 
   items: Item[];
   initial?: number[];
@@ -65,7 +65,7 @@ export default class extends React.Component<Props, State> {
       selected,
     }));
 
-    this.props.onToggleLock(selected.filter(i => i.locked));
+    this.props.onToggleLock!(selected.filter(i => i.locked));
   };
 
   handleChange = (item: Item) => {
@@ -122,11 +122,13 @@ export default class extends React.Component<Props, State> {
                 className="delete icon"
                 onClick={() => this.handleRemove(item)}
               />
-              <i
-                className={locked(item)}
-                style={{ marginLeft: '1rem' }}
-                onClick={() => this.handleToggleLock(item.id)}
-              />
+              {this.props.onToggleLock && (
+                <i
+                  className={locked(item)}
+                  style={{ marginLeft: '1rem' }}
+                  onClick={() => this.handleToggleLock(item.id)}
+                />
+              )}
             </div>
           ))}
         </div>

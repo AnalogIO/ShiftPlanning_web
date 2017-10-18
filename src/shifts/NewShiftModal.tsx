@@ -98,7 +98,6 @@ export default class NewShiftModal extends React.Component<Props, State> {
                     locked: false,
                   }))}
                   onChange={items => this.handleInputChange('employees', items)}
-                  onToggleLock={console.log}
                 />
               </label>
             </div>
