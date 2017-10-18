@@ -69,7 +69,14 @@ export default class ScheduleShiftForm extends Component<Props, {}> {
           employeeIds: ({ employeeIds }: typeof initial) =>
             employeeIds.length === 0 && 'Must not be empty',
         }}
-        form={({ pristine, field, submitting, invalid, handleSubmit }) => (
+        form={({
+          values,
+          pristine,
+          field,
+          submitting,
+          invalid,
+          handleSubmit,
+        }) => (
           <form className="ui form" onSubmit={handleSubmit}>
             {field('start', props => (
               <Input {...props} placeholder="08:00" label="Start" />
@@ -90,10 +97,15 @@ export default class ScheduleShiftForm extends Component<Props, {}> {
                   <SuggestionInput
                     initial={initial.employeeIds}
                     items={employeeList.map(e => ({
-                      ...e,
+                      id: e.id,
                       name: `${e.firstName} ${e.lastName}`,
+                      locked: (values as any).lockedEmployeeIds.includes(e.id),
                     }))}
-                    onChange={vals => update(vals.map(e => e.id))}
+                    onChange={vals => update(vals.map(v => v.id))}
+                    onToggleLock={vals =>
+                      field('lockedEmployeeIds', ({ update: u }) =>
+                        u(vals.map(v => v.id)),
+                      )}
                   />
                 </label>
               </div>

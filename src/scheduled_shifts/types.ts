@@ -9,6 +9,7 @@ export interface ScheduledShiftDto {
   start: string;
   end: string;
   employees: Employee[];
+  lockedEmployeeIds: number[];
 }
 
 export interface ScheduledShift {
@@ -17,4 +18,5 @@ export interface ScheduledShift {
   start: string;
   end: string;
   employees: number[];
+  lockedEmployeeIds: number[];
 }

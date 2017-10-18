@@ -99,10 +99,12 @@ export default class EditShiftModal extends React.Component<Props, State> {
                 <SuggestionInput
                   initial={this.props.shift.employees.map(e => e.id)}
                   items={this.props.employees.map(e => ({
-                    ...e,
+                    id: e.id,
                     name: `${e.firstName} ${e.lastName}`,
+                    locked: false,
                   }))}
                   onChange={items => this.handleInputChange('employees', items)}
+                  onToggleLock={console.log}
                 />
               </label>
             </div>

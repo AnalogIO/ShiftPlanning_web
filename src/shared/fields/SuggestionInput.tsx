@@ -3,10 +3,13 @@ import React from 'react';
 interface Item {
   name: string;
   id: number;
+  locked: boolean;
 }
 
 interface Props {
   onChange: (items: Item[]) => void;
+  onToggleLock: (items: Item[]) => void;
+
   items: Item[];
   initial?: number[];
 }
@@ -53,6 +56,18 @@ export default class extends React.Component<Props, State> {
     this.props.onChange(selected);
   };
 
+  handleToggleLock = (id: number) => {
+    const selected = this.state.selected.map(
+      item => (id === item.id ? { ...item, locked: !item.locked } : item),
+    );
+
+    this.setState(state => ({
+      selected,
+    }));
+
+    this.props.onToggleLock(selected.filter(i => i.locked));
+  };
+
   handleChange = (item: Item) => {
     if (!item) {
       return;
@@ -94,18 +109,26 @@ export default class extends React.Component<Props, State> {
   };
 
   render() {
+    const locked = (item: Item) =>
+      item.locked ? 'lock icon' : 'unlock alternate icon';
+
     return (
       <div>
         <div>
-          {this.state.selected.map(item =>
+          {this.state.selected.map(item => (
             <div key={item.id} className="ui label">
               {item.name}
               <i
                 className="delete icon"
                 onClick={() => this.handleRemove(item)}
               />
-            </div>,
-          )}
+              <i
+                className={locked(item)}
+                style={{ marginLeft: '1rem' }}
+                onClick={() => this.handleToggleLock(item.id)}
+              />
+            </div>
+          ))}
         </div>
         <div>
           <input
@@ -114,7 +137,7 @@ export default class extends React.Component<Props, State> {
             onKeyDown={this.handleKeyDown}
           />
         </div>
-        {this.state.value.length >= 2 &&
+        {this.state.value.length >= 2 && (
           <div
             style={{
               listStyleType: 'none',
@@ -127,7 +150,7 @@ export default class extends React.Component<Props, State> {
               zIndex: 10000,
             }}
           >
-            {this.match(this.state.value).map(item =>
+            {this.match(this.state.value).map(item => (
               <div
                 style={{
                   borderBottom: '1px solid #ddd',
@@ -138,9 +161,10 @@ export default class extends React.Component<Props, State> {
                 onClick={() => this.handleChange(item)}
               >
                 {item.name}
-              </div>,
-            )}
-          </div>}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     );
   }

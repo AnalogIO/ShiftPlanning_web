@@ -93,10 +93,12 @@ export default class NewShiftModal extends React.Component<Props, State> {
                 Employees
                 <SuggestionInput
                   items={this.props.employees.map(e => ({
-                    ...e,
+                    id: e.id,
                     name: `${e.firstName} ${e.lastName}`,
+                    locked: false,
                   }))}
                   onChange={items => this.handleInputChange('employees', items)}
+                  onToggleLock={console.log}
                 />
               </label>
             </div>
