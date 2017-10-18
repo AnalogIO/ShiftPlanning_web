@@ -20,3 +20,4 @@ provide some screenshots to provide an idea for the application.
 ### Shifts
 
 ![](screenshots/shifts.png)
+

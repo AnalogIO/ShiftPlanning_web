@@ -2162,7 +2162,7 @@ enhanced-resolve@3.3.0:
     object-assign "^4.0.1"
     tapable "^0.2.5"
 
-enhanced-resolve@^3.0.0:
+enhanced-resolve@^3.0.0, enhanced-resolve@^3.4.1:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-3.4.1.tgz#0421e339fd71419b3da13d129b3979040230476e"
   dependencies:
@@ -4471,7 +4471,7 @@ oauth-sign@~0.8.1:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.8.2.tgz#46a6ab7f0aead8deae9ec0565780b7d4efeb9d43"
 
-object-assign@4.1.1, object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
+object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
 
@@ -5338,9 +5338,9 @@ react-error-overlay@^1.0.8:
     settle-promise "1.0.0"
     source-map "0.5.6"
 
-react-formie@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/react-formie/-/react-formie-0.2.1.tgz#a8dce762413620234805dd830876afbd353ef44b"
+react-formie@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-formie/-/react-formie-0.2.2.tgz#caa55ab08a18b9ec144a6190bdfe9f906adde6e5"
   dependencies:
     tslib "^1.7.1"
   optionalDependencies:
@@ -6351,7 +6351,7 @@ symbol-tree@^3.2.1:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.2.tgz#ae27db38f660a7ae2e1c3b7d1bc290819b8519e6"
 
-tapable@^0.2.5, tapable@^0.2.7, tapable@~0.2.5:
+tapable@^0.2.5, tapable@^0.2.7, tapable@^0.2.8, tapable@~0.2.5:
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-0.2.8.tgz#99372a5c999bf2df160afc0d74bed4f47948cd22"
 
