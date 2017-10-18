@@ -1,7 +1,7 @@
 import React, { Component, EventHandler, FormEvent } from 'react';
 
 import Formie from 'react-formie';
-import { Checkbox, Input } from 'shared/fields';
+import { Checkbox, Dropdown, Input } from 'shared/fields';
 
 import Button from 'shared/Button';
 import { Title } from 'titles/types';
@@ -34,11 +34,12 @@ export default class EmployeeForm extends Component<Props, {}> {
       <Formie
         initial={this.props.initial}
         validate={{
-          email: (v: string) => !/.+@.+/.test(v) && 'Invalid email',
-          firstName: (v: string) =>
-            v.length === 0 && 'First name must not be empty',
-          lastName: (v: string) =>
-            v.length === 0 && 'Last name must not be empty',
+          email: ({ email }: Employee) =>
+            !/.+@.+/.test(email) && 'Invalid email',
+          firstName: ({ firstName }: Employee) =>
+            firstName.length === 0 && 'First name must not be empty',
+          lastName: ({ lastName }: Employee) =>
+            lastName.length === 0 && 'Last name must not be empty',
         }}
         onSubmit={this.props.handleSubmit}
         form={({
@@ -48,29 +49,34 @@ export default class EmployeeForm extends Component<Props, {}> {
           invalid,
           handleSubmit,
           values,
-        }) =>
+          errors,
+        }) => (
           <form className="ui form" onSubmit={handleSubmit}>
             {field('email', props => <Input placeholder="Email" {...props} />)}
-            {field('firstName', props =>
-              <Input placeholder="First name" {...props} />,
-            )}
-            {field('lastName', props =>
-              <Input placeholder="Last name" {...props} />,
-            )}
+
+            {field('firstName', props => (
+              <Input placeholder="First name" {...props} />
+            ))}
+
+            {field('lastName', props => (
+              <Input placeholder="Last name" {...props} />
+            ))}
+
+            {field('employeeTitleId', props => (
+              <Dropdown
+                {...props}
+                placeholder="Employee title"
+                options={this.props.options}
+              />
+            ))}
+
             {field('active', props => <Checkbox label="Active" {...props} />)}
 
             <Button primary disabled={submitting || pristine || invalid}>
               {this.props.submitText}
             </Button>
-            {/*
-        <DropdownField
-          name="employeeTitleId"
-          placeholder="Employee title"
-          options={this.props.options}
-        />
-           */}
 
-            {onDelete &&
+            {onDelete && (
               <Button
                 negative
                 basic
@@ -78,8 +84,10 @@ export default class EmployeeForm extends Component<Props, {}> {
                 onClick={this.handleDelete}
               >
                 Remove
-              </Button>}
-          </form>}
+              </Button>
+            )}
+          </form>
+        )}
       />
     );
   }
