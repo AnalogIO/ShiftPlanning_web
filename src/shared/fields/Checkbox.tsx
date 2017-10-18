@@ -15,7 +15,7 @@ export default ({
   update,
   value,
   ...props,
-}: InputProps) =>
+}: InputProps) => (
   <div className="field">
     <div className="ui checkbox">
       <input
@@ -24,8 +24,7 @@ export default ({
         onChange={e => update(e.target.checked)}
         {...props}
       />
-      <label>
-        {label}
-      </label>
+      <label>{label}</label>
     </div>
-  </div>;
+  </div>
+);

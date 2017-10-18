@@ -64,8 +64,10 @@ export default class ScheduleShiftForm extends Component<Props, {}> {
         onSubmit={this.props.handleSubmit}
         initial={initial}
         validate={{
-          start: timeValidator,
-          end: (v: any, values: typeof initial) => endValidator(values),
+          start: ({ start }: typeof initial) => timeValidator(start),
+          end: (values: typeof initial) => endValidator(values),
+          employeeIds: ({ employeeIds }: typeof initial) =>
+            employeeIds.length === 0 && 'Must not be empty',
         }}
         form={({ pristine, field, submitting, invalid, handleSubmit }) => (
           <form className="ui form" onSubmit={handleSubmit}>

@@ -5,21 +5,20 @@ import { Email, Password } from 'shared/fields';
 
 import Button from 'shared/Button';
 
-interface FormValues {
-  email: string;
-  password: string;
-}
+const initial = { email: '', password: '' };
 
 interface Props {
-  handleSubmit: (values: FormValues) => Promise<void>;
+  handleSubmit: (values: typeof initial) => Promise<void>;
 }
 
 export default (props: Props) => (
   <Formie
-    initial={{ email: '', password: '' } as FormValues}
+    initial={initial}
     validate={{
-      email: (v: string) => !/.+@.+/.test(v) && 'Invalid email',
-      password: (v: string) => !v && 'Password required',
+      email: ({ email }: typeof initial) =>
+        !/.+@.+/.test(email) && 'Invalid email',
+      password: ({ password }: typeof initial) =>
+        !password && 'Password required',
     }}
     onSubmit={props.handleSubmit}
     form={({ handleSubmit, field, submitting, invalid }) => (
