@@ -12,11 +12,12 @@ export const scheduleSchema = new schema.Entity('schedules', {
   scheduledShifts: [scheduledShiftSchema],
 });
 
-export const checkInSchema = new schema.Entity('checkIns', {
-  employee: employeeSchema,
-});
+// export const checkInSchema = new schema.Entity('checkIns', {
+//   employee: employeeSchema,
+// });
 
 export const shiftSchema = new schema.Entity('shifts', {
-  checkIns: [checkInSchema],
+  // This fails when uncommented but used to be required before so
+  // keeping it for safety if needed later checkIns: [checkInSchema],
   employees: [employeeSchema],
 });
