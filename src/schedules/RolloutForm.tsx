@@ -55,7 +55,7 @@ const RolloutForm = (props: StateProps & DispatchProps) => (
 );
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  scheduleId: selectors.getById(state, state.location.payload.scheduleId),
+  scheduleId: state.location.payload.scheduleId,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
