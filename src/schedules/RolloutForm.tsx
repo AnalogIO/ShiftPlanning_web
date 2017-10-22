@@ -12,27 +12,29 @@ import Formie from 'react-formie';
 import Button from 'shared/Button';
 import { Input, NumberInput } from 'shared/fields';
 
-type FormValues = { from: string; to: string; startFrom: number };
+const initial = { from: '', to: '', startFrom: 1 };
+
+type t = typeof initial;
 
 interface StateProps {
   scheduleId: number;
 }
 
 interface DispatchProps {
-  handleSubmit: (values: FormValues, scheduleId: number) => void;
+  handleSubmit: (values: t, scheduleId: number) => void;
 }
 
 const RolloutForm = (props: StateProps & DispatchProps) => (
   <Formie
-    initial={{ from: '', to: '', startFrom: 1 } as FormValues}
-    onSubmit={(values: FormValues) =>
-      props.handleSubmit(values, props.scheduleId)}
+    initial={initial}
+    onSubmit={(values: t) => props.handleSubmit(values, props.scheduleId)}
     validate={{
-      from: (v: string) =>
-        !/\d\d-\d\d-\d\d/.test(v) && 'Date looks wrongly formatted',
-      to: (v: string) =>
-        !/\d\d-\d\d-\d\d/.test(v) && 'Date looks wrongly formatted',
-      startFrom: (v: number) => v === 0 && 'Has to start from a positive week',
+      from: ({ from }: t) =>
+        !/\d\d-\d\d-\d\d/.test(from) && 'Date looks wrongly formatted',
+      to: ({ to }: t) =>
+        !/\d\d-\d\d-\d\d/.test(to) && 'Date looks wrongly formatted',
+      startFrom: ({ startFrom }: t) =>
+        startFrom === 0 && 'Has to start from a positive week',
     }}
     form={({ handleSubmit, submitting, pristine, invalid, field, ...rest }) => (
       <form className="ui form" onSubmit={handleSubmit}>
@@ -57,7 +59,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>): DispatchProps => ({
-  async handleSubmit(formValues: FormValues, scheduleId: number) {
+  async handleSubmit(formValues: t, scheduleId: number) {
     const from = moment(formValues.from, 'DD-MM-YY').format('DD-MM-YYYY');
     const to = moment(formValues.to, 'DD-MM-YY').format('DD-MM-YYYY');
 
