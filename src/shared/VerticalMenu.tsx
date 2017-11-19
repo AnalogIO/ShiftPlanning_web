@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'redux-first-router-link';
 
+import './VerticalMenu.css';
+
 import { VerticalMenuItem } from 'shared/types';
 import SearchBox from 'shared/SearchBox';
 
@@ -73,11 +75,17 @@ export default class VerticalMenu extends React.Component<Props, State> {
             <h1>Hello</h1>
           </div>
         )}
-        <div style={{ padding: '1em 1em 0 1em' }}>
+        <div style={{ padding: '1em 1em 0.8em 1em' }}>
           <SearchBox onSearch={this.handleSearch} />
         </div>
+        <div className="ui fitted divider" />
         {creatingNewItem && (
-          <Link className="item" to={newLink ? newLink : ''}>
+          <Link
+            className="item"
+            to={newLink ? newLink : ''}
+            style={{ color: '#4183c4' }}
+          >
+            <i className="add circle icon" />
             {newItemString}
           </Link>
         )}
@@ -85,7 +93,7 @@ export default class VerticalMenu extends React.Component<Props, State> {
           .filter(item => item.title.toLowerCase().includes(this.state.search))
           .map((item, index) => (
             <Link
-              className={`item ${item.active ? 'active' : ''}`}
+              className={`item ${item.active ? 'active grey-background' : ''}`}
               key={item.key || index}
               to={item.link}
             >
