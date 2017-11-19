@@ -56,7 +56,7 @@ class WeekPreferenceSchedule extends React.Component<Props, State> {
     const { schedule } = this.props;
     const { scheduledShifts } = schedule;
 
-    const days = interval(7).map(i =>
+    const days = interval(5).map(i => (
       <DaySchedule
         key={i}
         weekDay={i}
@@ -65,14 +65,12 @@ class WeekPreferenceSchedule extends React.Component<Props, State> {
         scheduleId={schedule.id}
         newShift={false}
         onPreferenceChange={this.handlePreferenceChange}
-      />,
-    );
+      />
+    ));
 
     return (
       <div>
-        <div className="ui seven column grid">
-          {days}
-        </div>
+        <div className="ui five column grid">{days}</div>
         <Button onClick={this.handleSavePreferences}>Save</Button>
       </div>
     );
