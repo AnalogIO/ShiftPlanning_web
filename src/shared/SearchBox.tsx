@@ -1,10 +1,18 @@
 import React from 'react';
 
-export default () => (
+interface Props {
+  onSearch: (search: string) => void;
+}
+
+export default (props: Props) => (
   <div>
     <div className="ui small input icon input fluid">
       <i className="search icon" />
-      <input type="text" placeholder="Search for name..." />
+      <input
+        onChange={e => props.onSearch(e.target.value)}
+        type="text"
+        placeholder="Search for name..."
+      />
     </div>
     <div
       style={{

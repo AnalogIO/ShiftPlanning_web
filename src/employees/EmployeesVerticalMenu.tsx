@@ -26,4 +26,4 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-export default connect(mapStateToProps)(VerticalMenu);
+export default connect(mapStateToProps)(VerticalMenu as any);
