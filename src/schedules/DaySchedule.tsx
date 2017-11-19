@@ -35,20 +35,24 @@ export default class DaySchedule extends Component<Props, {}> {
     return (
       <div className="column">
         <div className="ui fluid card">
+          <div
+            className="content center aligned"
+            style={{ padding: '1em 1em 0.6em 1em' }}
+          >
+            <p className="header">{WeekDays[day]}</p>
+          </div>
           <div className="content center aligned">
-            <p className="header">
-              {WeekDays[day]}
-            </p>
-            {sortBy(scheduledShifts, 'start').map(s =>
-              <div key={s.id}>
+            {sortBy(scheduledShifts, 'start').map(s => (
+              <div key={s.id} style={{ padding: '0.4em' }}>
                 {onPreferenceChange && time(s)}
-                {!onPreferenceChange &&
+                {!onPreferenceChange && (
                   <Link
                     to={`/schedules/${scheduleId}/shifts/${weekDay}/${s.id}`}
                   >
                     {time(s)}
-                  </Link>}
-                {onPreferenceChange &&
+                  </Link>
+                )}
+                {onPreferenceChange && (
                   <select
                     onChange={e =>
                       onPreferenceChange(
@@ -61,16 +65,18 @@ export default class DaySchedule extends Component<Props, {}> {
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
-                  </select>}
-              </div>,
-            )}
+                  </select>
+                )}
+              </div>
+            ))}
           </div>
-          {newShift &&
+          {newShift && (
             <div className="extra content center aligned">
               <Link to={`/schedules/${scheduleId}/shifts/${weekDay}`}>
                 + Add Shift
               </Link>
-            </div>}
+            </div>
+          )}
         </div>
       </div>
     );
