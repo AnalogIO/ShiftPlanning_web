@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'redux-first-router-link';
 
 import { VerticalMenuItem } from 'shared/types';
+import SearchBox from 'shared/SearchBox';
 
 interface Props {
   creatingNewItem: boolean;
@@ -61,7 +62,9 @@ export default (props: Props) => {
         >
           <h1>Hello</h1>
         </div>}
-      {searchBox}
+      <div style={{padding: '1em 1em 0 1em'}}>
+        <SearchBox/>
+      </div>
       {creatingNewItem &&
         <Link className="item" to={newLink ? newLink : ''}>
           {newItemString}
