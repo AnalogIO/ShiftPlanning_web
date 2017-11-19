@@ -27,8 +27,7 @@ export default (props: Props) => {
     newLink,
   } = props;
 
-  const searchBox =
-    onSearchChange &&
+  const searchBox = onSearchChange && (
     <div className="item">
       <div className="ui input">
         <input
@@ -37,7 +36,8 @@ export default (props: Props) => {
           onChange={() => onSearchChange(searchInput.value)}
         />
       </div>
-    </div>;
+    </div>
+  );
 
   if (isLoading) {
     return (
@@ -55,35 +55,35 @@ export default (props: Props) => {
         overflow: 'scroll',
       }}
     >
-      {title &&
+      {title && (
         <div
           className="ui basic segment"
           style={{ margin: 0, padding: '0 0 0 1rem' }}
         >
           <h1>Hello</h1>
-        </div>}
-      <div style={{padding: '1em 1em 0 1em'}}>
-        <SearchBox/>
+        </div>
+      )}
+      <div style={{ padding: '1em 1em 0 1em' }}>
+        <SearchBox />
       </div>
-      {creatingNewItem &&
+      {creatingNewItem && (
         <Link className="item" to={newLink ? newLink : ''}>
           {newItemString}
-        </Link>}
-      {items.map((item, index) =>
+        </Link>
+      )}
+      {items.map((item, index) => (
         <Link
           className={`item ${item.active ? 'active' : ''}`}
           key={item.key || index}
           to={item.link}
         >
           <p>
-            <strong>
-              {item.title}
-            </strong>
+            <strong>{item.title}</strong>
             <br />
             {item.subtitle}
           </p>
-        </Link>,
-      )}
+        </Link>
+      ))}
     </div>
   );
 };
