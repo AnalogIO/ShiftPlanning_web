@@ -21,7 +21,7 @@ export default class WeekSchedule extends Component<Props, {}> {
     const { newShifts, weekNumber, schedule } = this.props;
     const { scheduledShifts } = schedule;
 
-    const days = interval(7).map(i => {
+    const days = interval(5).map(i => {
       const weekDay = weekNumber * 7 + i;
 
       return (
@@ -41,7 +41,7 @@ export default class WeekSchedule extends Component<Props, {}> {
         <h2 className="header" style={{ textAlign: 'center' }}>
           Week {weekNumber + 1}
         </h2>
-        <div className="ui seven column grid">
+        <div className="ui five column grid">
           {days}
         </div>
       </div>
