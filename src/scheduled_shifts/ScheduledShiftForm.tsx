@@ -99,7 +99,8 @@ export default class ScheduleShiftForm extends Component<Props, {}> {
                     items={employeeList.map(e => ({
                       id: e.id,
                       name: `${e.firstName} ${e.lastName}`,
-                      locked: (values as any).lockedEmployeeIds.includes(e.id),
+                      locked: ((values as any).lockedEmployeeIds || []
+                      ).includes(e.id),
                     }))}
                     onChange={vals => update(vals.map(v => v.id))}
                     onToggleLock={vals =>
