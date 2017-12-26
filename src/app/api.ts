@@ -10,7 +10,7 @@ export const login = async (manager: ManagerLogin) => {
     .update(manager.password)
     .digest('base64');
 
-  const res = await client.post('/employees/login', { username, password });
+  const res = await client.post('/account/login', { username, password });
 
   const organization = res.data as LoginData;
 
