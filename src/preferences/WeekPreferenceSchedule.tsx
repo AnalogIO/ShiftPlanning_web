@@ -87,7 +87,7 @@ class WeekPreferenceSchedule extends React.Component<Props, State> {
     return (
       <div>
         <div className="ui five column grid">{days}</div>
-        <Button onClick={this.handleSavePreferences}>Save</Button>
+        <Button className="positive" style={{ marginTop: '1em' }} onClick={this.handleSavePreferences}>Save</Button>
       </div>
     );
   }

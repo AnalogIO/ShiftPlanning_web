@@ -57,6 +57,7 @@ export default class DaySchedule extends Component<Props, {}> {
                 )}
                 {onPreferenceChange && (
                   <select
+                    style={{ marginLeft: '1em' }}
                     defaultValue={String(preferences[scheduleId][s.id] || 0)}
                     onChange={e =>
                       onPreferenceChange(
@@ -68,7 +69,6 @@ export default class DaySchedule extends Component<Props, {}> {
                     <option value="0">-</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
-                    <option value="3">3</option>
                   </select>
                 )}
               </div>
