@@ -39,6 +39,7 @@ export interface RootState {
   scheduledShifts: ScheduledShiftState;
   shifts: ShiftState;
   titles: TitleState;
+  preferences: { [id: number]: { [id: number]: number } };
   // because `object` is not worth much on such a dynamic property
   location: Location & { payload: any };
 }

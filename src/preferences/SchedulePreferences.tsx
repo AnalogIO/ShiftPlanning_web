@@ -9,16 +9,21 @@ import WeekPreferenceSchedule from './WeekPreferenceSchedule';
 
 interface Props {
   schedule: ScheduleDto;
+  preferences: { [id: number]: { [id: number]: number } };
 }
 
 const SchedulePreferences = (props: Props) => (
-  <WeekPreferenceSchedule schedule={props.schedule} />
+  <WeekPreferenceSchedule
+    schedule={props.schedule}
+    preferences={props.preferences}
+  />
 );
 
 const { selectors: { getById } } = schedules;
 
 const mapStateToProps = (state: RootState) => ({
   schedule: getById(state, state.location.payload.scheduleId),
+  preferences: state.preferences,
 });
 
 export default connect(mapStateToProps)(SchedulePreferences);

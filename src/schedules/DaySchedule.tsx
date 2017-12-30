@@ -21,12 +21,15 @@ interface Props {
   scheduleId: number;
   newShift: boolean;
   onPreferenceChange?: (day: number, start: string, value: number) => void;
+  preferences?: { [id: number]: { [id: number]: number } };
 }
 
 export default class DaySchedule extends Component<Props, {}> {
   render() {
     const { newShift, day, weekDay, scheduledShifts, scheduleId } = this.props;
     const { onPreferenceChange } = this.props;
+
+    const preferences = this.props.preferences || {};
 
     // u2014 is an en dash
     const time = (s: ScheduledShiftDto) =>
@@ -54,6 +57,7 @@ export default class DaySchedule extends Component<Props, {}> {
                 )}
                 {onPreferenceChange && (
                   <select
+                    defaultValue={String(preferences[scheduleId][s.id] || 0)}
                     onChange={e =>
                       onPreferenceChange(
                         s.day,

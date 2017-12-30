@@ -11,6 +11,7 @@ import Button from 'shared/Button';
 
 interface Props {
   schedule: ScheduleDto;
+  preferences: { [id: number]: { [id: number]: number } };
 }
 
 interface State {
@@ -23,8 +24,17 @@ const getScheduledShifts = (
 ) => scheduledShifts.filter(s => weekDay + 1 === s.day);
 
 class WeekPreferenceSchedule extends React.Component<Props, State> {
+  get preferences() {
+    const { preferences, schedule } = this.props;
+
+    return Object.keys(preferences[schedule.id]).map(p => ({
+      scheduledShiftId: Number(p),
+      priority: preferences[schedule.id][p],
+    }));
+  }
+
   state = {
-    preferences: [] as Preference[],
+    preferences: this.preferences as Preference[],
   };
 
   handlePreferenceChange = (day: number, start: string, priority: number) => {
@@ -64,6 +74,7 @@ class WeekPreferenceSchedule extends React.Component<Props, State> {
         scheduledShifts={getScheduledShifts(i, scheduledShifts)}
         scheduleId={schedule.id}
         newShift={false}
+        preferences={this.props.preferences}
         onPreferenceChange={this.handlePreferenceChange}
       />
     ));

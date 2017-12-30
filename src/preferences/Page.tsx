@@ -15,7 +15,7 @@ interface StateProps {
   location: Location;
 }
 
-const PreferenceScreen = (props: StateProps) =>
+const PreferenceScreen = (props: StateProps) => (
   <HeaderHorizontalSplit
     headerText="Preferences"
     isLoading={!props.hasFetched}
@@ -27,10 +27,20 @@ const PreferenceScreen = (props: StateProps) =>
         {props.location.type === routes.update.type && <SchedulePreferences />}
       </div>
     }
-  />;
+  />
+);
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  hasFetched: hasFetchedSchedules(state),
+  hasFetched: (() => {
+    if (state.location.type === routes.update.type) {
+      return (
+        hasFetchedSchedules(state) &&
+        !!state.preferences[state.location.payload.scheduleId]
+      );
+    }
+
+    return hasFetchedSchedules(state);
+  })(),
   location: state.location,
 });
 
