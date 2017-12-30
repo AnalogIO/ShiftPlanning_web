@@ -9,3 +9,9 @@ export const fetchPreferences = actionCreator.async<
   { [id: number]: number },
   string
 >('FETCH_PREFERENCES');
+
+export const updatePreferences = actionCreator.async<
+  number,
+  { [id: number]: number },
+  string
+>('UPDATE_PREFERENCES');

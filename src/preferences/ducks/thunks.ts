@@ -23,3 +23,28 @@ export const fetchPreferences = (id: number) => async (
     }),
   );
 };
+
+export const updatePreferences = (
+  id: number,
+  preferences: Preference[],
+) => async (dispatch: Dispatch<any>) => {
+  const params = id;
+
+  await api.setPreferences(id, preferences);
+
+  const result = preferences.reduce(
+    (acc: { [id: number]: number }, s: Preference) => {
+      acc[s.scheduledShiftId] = s.priority;
+
+      return acc;
+    },
+    {},
+  );
+
+  return dispatch(
+    actions.updatePreferences.done({
+      params,
+      result,
+    }),
+  );
+};

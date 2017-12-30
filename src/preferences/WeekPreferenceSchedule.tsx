@@ -1,5 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { Dispatch } from 'redux';
 
+import * as thunks from './ducks/thunks';
+import { RootState } from 'shared/types';
 import { api } from 'preferences';
 import { ScheduledShiftDto } from 'scheduled_shifts/types';
 import { ScheduleDto } from 'schedules/types';
@@ -12,6 +16,7 @@ import Button from 'shared/Button';
 interface Props {
   schedule: ScheduleDto;
   preferences: { [id: number]: { [id: number]: number } };
+  updatePreferences: (id: number, preferences: Preference[]) => void;
 }
 
 interface State {
@@ -59,7 +64,7 @@ class WeekPreferenceSchedule extends React.Component<Props, State> {
     const { preferences } = this.state;
     const { schedule } = this.props;
 
-    api.setPreferences(schedule.id, preferences);
+    this.props.updatePreferences(schedule.id, preferences);
   };
 
   render() {
@@ -88,4 +93,10 @@ class WeekPreferenceSchedule extends React.Component<Props, State> {
   }
 }
 
-export default WeekPreferenceSchedule;
+const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
+  updatePreferences: (id: number, preferences: Preference[]) => {
+    dispatch(thunks.updatePreferences(id, preferences));
+  },
+});
+
+export default connect(undefined, mapDispatchToProps)(WeekPreferenceSchedule);
