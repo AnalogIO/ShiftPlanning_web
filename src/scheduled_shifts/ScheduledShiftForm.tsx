@@ -66,8 +66,6 @@ export default class ScheduleShiftForm extends Component<Props, {}> {
         validate={{
           start: ({ start }: typeof initial) => timeValidator(start),
           end: (values: typeof initial) => endValidator(values),
-          employeeIds: ({ employeeIds }: typeof initial) =>
-            employeeIds.length === 0 && 'Must not be empty',
         }}
         form={({
           values,
