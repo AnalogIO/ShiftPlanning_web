@@ -41,10 +41,14 @@ export const updatePreferences = (
     {},
   );
 
-  return dispatch(
+  const dispatched = dispatch(
     actions.updatePreferences.done({
       params,
       result,
     }),
   );
+
+  alert('Your preferences have been updated!');
+
+  return dispatched;
 };
