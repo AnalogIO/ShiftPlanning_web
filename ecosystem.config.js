@@ -12,12 +12,12 @@ module.exports = {
     },
     {
       name: 'ShiftPlanning_beta',
-      script: 'scripts/start.js',
+      script: 'scripts/serve.js',
       env: {
         PORT: 13338,
       },
       env_development: {
-        NODE_ENV: 'development',
+        NODE_ENV: 'production',
       },
     },
   ],
@@ -41,7 +41,7 @@ module.exports = {
       repo: 'git@github.com:AnalogIO/ShiftPlanning_web.git',
       path: '/var/www/beta.shiftplanning.cafeanalog.dk',
       'post-deploy':
-        'yarn && pm2 startOrGracefulReload ecosystem.config.js --env development',
+        'yarn && pm2 startOrGracefulReload ecosystem.config.js --env production',
     },
   },
 };
