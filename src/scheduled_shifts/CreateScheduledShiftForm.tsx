@@ -24,10 +24,13 @@ const mapDispatchToProps = (
   { schedule, day }: any,
 ) => ({
   async handleSubmit(data: any) {
-    return dispatch(scheduledShifts.thunks.create(schedule.id, data));
+    return dispatch(
+      scheduledShifts.thunks.create(schedule.id, { ...data, day }),
+    );
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  ScheduledShiftForm as any,
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ScheduledShiftForm as any);
