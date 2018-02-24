@@ -4,6 +4,7 @@ import { Dispatch } from 'redux';
 import { Location, redirect } from 'redux-first-router';
 
 import routes from 'routes';
+import { routes as appRoutes } from 'app';
 import { routes as routesSchedules } from 'schedules';
 import { RootState } from 'shared/types';
 import { CurrentUser } from './types';
@@ -18,13 +19,21 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  redirectTo: () => void;
+  redirectTo: (path: string) => void;
 }
 
 class App extends React.Component<StateProps & DispatchProps, {}> {
   componentDidMount() {
+    if (!this.props.currentUser) {
+      this.props.redirectTo(appRoutes.login.type);
+
+      return;
+    }
+
     if (location.pathname === '/') {
-      this.props.redirectTo();
+      this.props.redirectTo(routesSchedules.create.type);
+
+      return;
     }
   }
 
@@ -59,8 +68,10 @@ const mapStateToProps = ({ app, location }: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) => ({
-  redirectTo() {
-    dispatch((redirect as any)(routesSchedules.create()));
+  redirectTo(actionType: string) {
+    const action = redirect({ type: actionType } as any);
+
+    return dispatch(action);
   },
 });
 

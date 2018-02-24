@@ -1,6 +1,7 @@
-import { actions } from 'app';
+import { actions, routes as appRoutes } from 'app';
+import { routes as schedulesRoutes } from 'schedules';
 import { AxiosInstance } from 'axios';
-
+import { redirect } from 'redux-first-router';
 
 const LOCAL_STORAGE_STRING = 'organization';
 
@@ -42,8 +43,16 @@ export default (client: AxiosInstance) => (store: any) => (next: any) => (
 
     localStorage.setItem(LOCAL_STORAGE_STRING, JSON.stringify(organization));
 
+    const state = store.getState();
+
+    if (state.location.type === appRoutes.login.type) {
+      document.location.assign('/schedules');
+    }
+
     if (action.meta && action.meta.trigger) {
-      store.dispatch({ type: store.getState().location.type });
+      store.dispatch({ type: state.location.type });
+
+      return;
     }
   }
 
