@@ -25,17 +25,24 @@ export default class extends React.Component<Props, State> {
     value: '',
   };
 
-  componentDidMount() {
-    const { initial } = this.props;
+  init = (props: Props) => {
+    const { initial } = props;
 
     if (!initial) {
       return;
     }
 
-    // TODO: this is pretty slow... could probably be optimized easily
     this.setState(state => ({
-      selected: initial.map(id => this.props.items.find(i => i.id === id)!),
+      selected: initial.map(id => props.items.find(i => i.id === id)!),
     }));
+  };
+
+  componentWillReceiveProps(nextProps: Props) {
+    this.init(nextProps);
+  }
+
+  componentDidMount() {
+    this.init(this.props);
   }
 
   match = (name: string): Item[] => {
