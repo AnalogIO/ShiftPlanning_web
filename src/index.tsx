@@ -5,7 +5,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
-import registerServiceWorker from 'registerServiceWorker';
 import { store } from 'store';
 
 import AppPage from 'app/Page';
@@ -20,7 +19,6 @@ const render = () => {
 };
 
 render();
-registerServiceWorker();
 
 if (module.hot) {
   module.hot.accept('app/Page', render);

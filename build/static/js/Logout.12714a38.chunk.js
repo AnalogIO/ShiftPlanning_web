@@ -1,0 +1,2 @@
+webpackJsonp([5],{539:function(e,o,t){"use strict";Object.defineProperty(o,"__esModule",{value:!0});var n=t(8),u=t.n(n),l=t(28),r=t(34);class c extends n.Component{componentDidMount(){this.props.logout()}render(){return u.a.createElement("div",null)}}o.default=t.i(l.connect)(void 0,e=>({logout:()=>e(r.b.logout())}))(c)}});
+//# sourceMappingURL=Logout.12714a38.chunk.js.map
