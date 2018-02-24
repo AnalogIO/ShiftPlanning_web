@@ -2,6 +2,7 @@ import React, { Component, EventHandler, FormEvent } from 'react';
 
 import { Employee } from 'employees/types';
 import { ScheduledShiftDto } from 'scheduled_shifts/types';
+import { WeekDays } from 'schedules';
 
 import Formie from 'react-formie';
 import Button from 'shared/Button';
@@ -59,6 +60,9 @@ export default class ScheduleShiftForm extends Component<Props, {}> {
       return false;
     };
 
+    const week = Math.ceil(initial.day / 7);
+    const weekDay = WeekDays[(initial.day - 1) % 7];
+
     return (
       <Formie
         onSubmit={this.props.handleSubmit}
@@ -76,6 +80,9 @@ export default class ScheduleShiftForm extends Component<Props, {}> {
           handleSubmit,
         }) => (
           <form className="ui form" onSubmit={handleSubmit}>
+            <h3>
+              Week {week} - {weekDay}
+            </h3>
             {field('start', props => (
               <Input {...props} placeholder="08:00" label="Start" />
             ))}

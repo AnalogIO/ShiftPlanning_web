@@ -1,18 +1,9 @@
 import React, { Component } from 'react';
 import Link from 'redux-first-router-link';
 
+import { WeekDays } from 'schedules';
 import { sortBy } from 'lodash';
 import { ScheduledShiftDto } from 'scheduled_shifts/types';
-
-enum WeekDays {
-  Monday,
-  Tuesday,
-  Wednesday,
-  Thursday,
-  Friday,
-  Saturday,
-  Sunday,
-}
 
 interface Props {
   day: number;
