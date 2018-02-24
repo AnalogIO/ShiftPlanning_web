@@ -121,6 +121,13 @@ export default class extends React.Component<Props, State> {
 
     return (
       <div>
+        <div style={{ marginBottom: '0.5rem' }}>
+          <input
+            value={this.state.value}
+            onChange={this.handleInputChange}
+            onKeyDown={this.handleKeyDown}
+          />
+        </div>
         <div>
           {this.state.selected.map(item => (
             <div key={item.id} className="ui label">
@@ -138,13 +145,6 @@ export default class extends React.Component<Props, State> {
               )}
             </div>
           ))}
-        </div>
-        <div>
-          <input
-            value={this.state.value}
-            onChange={this.handleInputChange}
-            onKeyDown={this.handleKeyDown}
-          />
         </div>
         {this.state.value.length >= 2 && (
           <div
