@@ -4,7 +4,7 @@
     "axios": "^0.18.1",
     "enhanced-resolve": "^3.4.1",
     "loader-runner": "^2.3.0",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "moment": "^2.18.1",
     "normalizr": "^3.2.3",
     "object-assign": "^4.1.1",
